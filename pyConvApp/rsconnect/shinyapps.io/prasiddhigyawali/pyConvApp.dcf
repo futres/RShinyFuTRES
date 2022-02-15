@@ -1,0 +1,12 @@
+name: pyConvApp
+title: pyConvApp
+username:
+account: prasiddhigyawali
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5660502
+bundleId: 5582357
+url: https://prasiddhigyawali.shinyapps.io/pyConvApp/
+when: 1644953731.61094
+asMultiple: FALSE
+asStatic: FALSE

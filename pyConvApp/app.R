@@ -38,14 +38,23 @@ ui <- fluidPage(
                          selected = "head"),
             
             tags$hr(),
+            ## Column Check function, makes sure that
+            ## column names in the csv match those of
+            ## the FuTRES template
             radioButtons("cc", "Column Check",
                          choices = c(No = "cc_no",
                                      Yes = "cc_yes"),
                          selected = "cc_no"),
+            ## Verbatim Locality function
             radioButtons("verLoc", "Verbatim Locality",
                          choices = c(No = "vl_no",
                                      Yes = "vl_yes"),
                          selected = "vl_no"),
+            ## If user selects yes above, the app
+            ## will present a drop down menu of 
+            ## all of the column names for the
+            ## user to select which columns will
+            ## create verbatim locality
             conditionalPanel(
                 condition = "input.verLoc == 'vl_yes'",
                 checkboxGroupInput("verLoc_cols",
@@ -53,19 +62,24 @@ ui <- fluidPage(
                                    c("label 1" = "option1",
                                      "label 2" = "option2")),
             ),
+            ## Material Sample Type function, will
+            ## only work with a materialSampleType
+            ## column
             radioButtons("mst", "Material Sample Type",
                          choices = c(No = "mst_no",
                                      Yes = "mst_yes"),
                          selected = "mst_no"),
             conditionalPanel(
                 condition = "input.mst == 'mst_yes'",
-                textInput("matSamp_col", "Column Name", value = "", width = NULL,
-                          placeholder = NULL),
+                ## Values to replace
                 textInput("matSamp_check", "Values to check for(Seperate with commas)", value = "", width = NULL,
                           placeholder = NULL),
+                ## Replacement values
                 textInput("matSamp_replace", "Replacement Values(Seperate with commas)", value = "", width = NULL,
                           placeholder = NULL)
             ),
+            ## Asks user if the values of Length
+            ## and Weight columns 
             radioButtons("conv", "Unit Conversions",
                          choices = c(No = "conv_no",
                                      Yes = "conv_yes"),
