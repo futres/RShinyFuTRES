@@ -1,7 +1,7 @@
 # RShinyFuTRES
 <h2>Data Manipulation Python Conversions</h2>
 
-An RShiny app used to convert tabular data into a format for ingest into <a href="https://geome-db.org/about>GEOME</a> for the <a href="https://futres-data-interface.netlify.app/">FuTRES datastore<\a>. Please see the FuTRES <a href="https://futres.org/data_tutorial/">data tutorial<\a> for more instructions on how to upload data to be made available through our API. FuTRES requires specific <a href="https://github.com/futres/template/blob/master/template.csv">column names<\a>  and requires one record (e.g., measurement per specimen) per row. This app helps standardize column names and values, as well as converts short format (one specimen per row) into long format (one measurement per row).
+An RShiny app used to convert tabular data into a format for ingest into <a href="https://geome-db.org/about">GEOME</a> for the <a href="https://futres-data-interface.netlify.app/">FuTRES datastore</a>. Please see the FuTRES <a href="https://futres.org/data_tutorial/">data tutorial</a> for more instructions on how to upload data to be made available through our API. FuTRES requires specific <a href="https://github.com/futres/template/blob/master/template.csv">column names</a>  and requires one record (e.g., measurement per specimen) per row. This app helps standardize column names and values, as well as converts short format (one specimen per row) into long format (one measurement per row).
 
 **If you have any problems while running this program or have any questions please feel free to email futres.team@gmail.com with your concerns.**
 
