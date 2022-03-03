@@ -5,7 +5,7 @@ An RShiny app used to convert tabular data into a format for ingest into <a href
 
 **If you have any problems while running this program or have any questions please feel free to email futres.team@gmail.com with your concerns.**
 
-Starting off, data sets tend to be in short format and look like this:
+Starting off, data sets tend to be in short format, with each row being a specimen, and possibly internal abbreviations for data fields:
 
 ```
 CatalogNo.  Date  Management Unit     County Sex  Age Status  Weight  Length 
@@ -22,7 +22,7 @@ CatalogNo.  Date  Management Unit     County Sex  Age Status  Weight  Length
 7840  11/30/2019         Siuslaw       Lane   M    0      A    43.0    58.0  
 
 ```
-However, with a couple of functions, it can be transformed into long format and look something like this:
+However, with a couple of functions, it can be transformed into long format, where each row is a measurement, and specimens are connected through the field individualID:
 
 ```
 CatalogNo.  Date     Sex  Age materialSampleType measurementValue  measurementType  measurementUnit       verbatimLocality yearCollected
