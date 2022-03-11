@@ -53,7 +53,7 @@ ui <- fluidPage(
             ## If user selects yes above, the app
             ## will present a drop down menu of 
             ## all of the column names for the
-            ## user to select which columns will
+            ## user to select which column(s) will
             ## create verbatim locality
             conditionalPanel(
                 condition = "input.verLoc == 'vl_yes'",
@@ -64,7 +64,11 @@ ui <- fluidPage(
             ),
             ## Material Sample Type function, will
             ## only work with a materialSampleType
-            ## column
+            ## column. The user can replace abbreviations
+            ## or other terms with standardized terms
+            ## (whole organism, part organism, whole bone,
+            ## part bone, whole skeleton, gutted, skinned,
+            ## gutted and skinned).
             radioButtons("mst", "Material Sample Type",
                          choices = c(No = "mst_no",
                                      Yes = "mst_yes"),
@@ -79,7 +83,11 @@ ui <- fluidPage(
                           placeholder = NULL)
             ),
             ## Asks user if the values of Length
-            ## and Weight columns 
+            ## and Weight columns need to be converted
+            ## to "g" and "mm" as standard units,
+            ## and if so, the user can choose to 
+            ## convert from lb, kg for "g" and 
+            ## in, m, and cm for "mm".
             radioButtons("conv", "Unit Conversions",
                          choices = c(No = "conv_no",
                                      Yes = "conv_yes"),
@@ -99,22 +107,40 @@ ui <- fluidPage(
                                          Grams = "g"),
                              selected = "g")
             ),
+            ## Allows the user to convert to standard
+            ## terms for sex: male or female.
             radioButtons("s", "sex",
                          choices = c(No = "s_no",
                                      Yes = "s_yes"),
                          selected = "s_no"),
+            ## Creates a year collected column from
+            ## the eventDate column, assuming the 
+            ## eventDate column is in MM-DD-YYYY
+            ## format.
             radioButtons("yc", "Year Collected",
                          choices = c(No = "yc_no",
                                      Yes = "yc_yes"),
                          selected = "yc_no"),
+            ## Compares countries in spreadsheet to
+            ## list of countries recognized by 
+            ## GEOME.
             radioButtons("cv", "Country Validity",
                          choices = c(No = "cv_no",
                                      Yes = "cv_yes"),
                          selected = "cv_no"),
+            ## Creates a materialSampleID that is
+            ## unique within the dataset.
             radioButtons("msID", "Material Sample ID",
                           choices = c(No = "msID_no",
                                       Yes = "msID_yes"),
                           selected = "msID_no"),
+            ## Creates a long version of the dataset,
+            ## where each row is a measurement. The
+            ## traits/variables become "measurementType"
+            ## and the values become "measurementValue".
+            ## The user can select which columns
+            ## are traits/measurements.
+            ## This also creates the diagnoticID.
             radioButtons("melt", "Data Melt",
                          choices = c(No = "melt_no",
                                      Yes = "melt_yes"),
@@ -234,6 +260,8 @@ server <- function(input, output,session) {
         }
     })
     
+    ## Outputs columns that do not match
+    ## the template.
     observe({
         req(input$file1)
         df <- open_df(input$file1$datapath)
@@ -252,7 +280,8 @@ server <- function(input, output,session) {
                                  selected = NULL)
     })
     
-    
+    ## Outputs countries not recognized
+    ## by GEOME.
     output$text <- renderPrint({
         req(input$file1)
         df <- open_df(input$file1$datapath)
