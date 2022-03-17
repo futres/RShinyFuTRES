@@ -77,6 +77,11 @@ The material sample type function is to standardize descriptions of the complete
 Once you have finished using this program please send a pull request for the updated matSampType dictionary file.
 
 ```
+add_ms_and_indivdID
+```
+The ID function adds individualID, with the assumption that each row in the original dataset is a unique indivdual. This function also adds materialSampleID, which is unique for each bone of an individual. See <a href="https://futres.org/how_it_works/">"how it works"</a> for more information. These are applied <i>before</i> turning the dataset into a long version using the dataMelt() funciton.
+
+```
 sex()
 ```
 The sex function helps standardize sex terms to a controlled vocabulary accepted by GEOME. For example, it takes values like "F" and "M" and changes them 
@@ -111,6 +116,11 @@ This function creates a unique materialSampleID for the dataframe.
 dataMelt()
 ```
 The dataMelt function combines the quantitative measurements(like weight and length) into one column. This creates long format data, where each row is a measurement of a trait.
+
+```
+diagnosticID()
+```
+The diagnosticID is unique for each row (i.e., record) and is applied <i>after</i> the dataMelt() function.
 
 ```
 inConv()
