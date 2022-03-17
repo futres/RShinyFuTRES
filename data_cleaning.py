@@ -211,7 +211,7 @@ def add_ms_and_indivdID(df):
     Adds unique hex value materialSampleID and eventID to dataframe
     """
     df = df.assign(materialSampleID = [uuid.uuid4().hex for _ in range(len(df.index))])
-    df = df.assign(eventID = df["materialSampleID"])
+    df = df.assign(individualID = np.arange(len(df)))
     return df
 
 #===========================================================================================================================================
