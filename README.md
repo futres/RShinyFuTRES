@@ -3,9 +3,16 @@
 
 An RShiny app used to convert tabular data into a format for ingest into <a href="https://geome-db.org/about">GEOME</a> for the <a href="https://futres-data-interface.netlify.app/">FuTRES datastore</a>. Please see the FuTRES <a href="https://futres.org/data_tutorial/">data tutorial</a> for more instructions on how to upload data to be made available through our API. FuTRES requires specific <a href="https://github.com/futres/template/blob/master/template.csv">column names</a>  and requires one record (e.g., measurement per specimen) per row. This app helps standardize column names and values, as well as converts short format (one specimen per row) into long format (one measurement per row). We also automatically generate all the IDs (diagnosticID, materialSampleID, individualID, and eventID) required for the dataset that FuTRES uses to help reason across the ontology. See <a href="https://futres.org/how_it_works/">How it Works</a> on the FuTRES website for more information.
 
-**If you have any problems while running this program or have any questions please feel free to email futres.team@gmail.com with your concerns.**
+If you have any problems while running this program or have any questions please feel free to email futres.team@gmail.com with your concerns.
 
-Starting off, we accept datasets that are in short format, with each row being a specimen, and possibly internal abbreviations for data fields:
+**Make sure you have conda installed:** <br>
+*<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html">MAC</a>*<br>
+*<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html">Windows</a>*<br>
+*<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">Linux</a>*<br>
+
+All dependencies needed will automatically be installed.
+
+We accept datasets that are in short format, with each row being a specimen, and possibly internal abbreviations for data fields:
 
 ```
 CatalogNo.  Date  Management Unit     County Sex  Age Status  Weight  Length 
