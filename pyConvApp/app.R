@@ -1,3 +1,5 @@
+
+
 #
 # This is a Shiny web application. You can run the application by clicking
 # the 'Run App' button above.
@@ -8,6 +10,12 @@
 #
 
 library(shiny)
+library(DT)
+library(RColorBrewer)
+library(reticulate)
+
+reticulate::py_install("pandas")
+reticulate::source_python("data_cleaning.py")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -125,9 +133,9 @@ ui <- fluidPage(
                          selected = "cv_no"),
             ## Asks user if they want to add MST ID
             radioButtons("msIDevID", "Material Sample ID and Event ID",
-                          choices = c(No = "msID-evID_no",
-                                      Yes = "msID-evID_yes"),
-                          selected = "msID_no"),
+                         choices = c(No = "msID-evID_no",
+                                     Yes = "msID-evID_yes"),
+                         selected = "msID-evID_no"),
             ## Asks user if they want to melt the 
             ## quantitative values in their
             ## data
@@ -240,7 +248,7 @@ server <- function(input, output,session) {
         }
         ##----------------------------------------------------------------------
         if (input$melt == "melt_yes"){
-            if (!is.null(input$dm_cols)){
+            if (length(input$dm_cols) >= 2){
                 arr = c(input$dm_cols)
                 df <- dataMelt(df,arr)
             }
