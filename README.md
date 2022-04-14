@@ -158,6 +158,11 @@ Changes values in kilograms to grams.
 mgConv()
 ```
 Changes values in milligrams to grams. 
+
+```
+license()
+```
+Adds licensing to the data. Licenses are assumed to be <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode">CC0</a>, unless specified as <a href="https://creativecommons.org/licenses/by/4.0/">CC BY</a> or <a href="https://opensource.org/licenses/BSD-3-Clause">BSD</a>.
             
 ```
 to_json()
