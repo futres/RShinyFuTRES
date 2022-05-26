@@ -21,13 +21,14 @@ reticulate::source_python("data_cleaning.py")
 ui <- fluidPage(
     
     # App title ----
-    titlePanel("Uploading Data"),
-    
+    titlePanel(tags$h1(
+        tags$a("Data Cleaning",href="https://github.com/futres/RShinyFuTRES/blob/main/README.md")
+    )
+    ),
     # Sidebar layout with input and output definitions ----
     sidebarLayout(
-        
         # Sidebar panel for inputs ----
-        sidebarPanel(
+        sidebarPanel(id = "tPanel",style = "overflow-y:scroll; max-height: 90vh; position:relative;",
             
             # Input: Select a file ----
             fileInput("file1", "Choose CSV File",
@@ -68,7 +69,7 @@ ui <- fluidPage(
                 checkboxGroupInput("verLoc_cols",
                                    "Temp Checkbox",
                                    c("label 1" = "option1",
-                                     "label 2" = "option2")),
+                                     "label 2" = "option2"))
             ),
             ## Material Sample Type function, will
             ## only work with a materialSampleType
@@ -120,7 +121,7 @@ ui <- fluidPage(
                          selected = "s_no"),
             ## Asks user if they want to
             ## add a year collected column
-            radioButtons("yc", "Year Collected",
+            radioButtons("yc", "Year Collected (Current date must be in yyyy-mm-dd format)",
                          choices = c(No = "yc_no",
                                      Yes = "yc_yes"),
                          selected = "yc_no"),
@@ -131,11 +132,6 @@ ui <- fluidPage(
                          choices = c(No = "cv_no",
                                      Yes = "cv_yes"),
                          selected = "cv_no"),
-            ## Asks user if they want to add MST ID
-            radioButtons("msIDevID", "Material Sample ID and Event ID",
-                         choices = c(No = "msID-evID_no",
-                                     Yes = "msID-evID_yes"),
-                         selected = "msID-evID_no"),
             ## Asks user if they want to melt the 
             ## quantitative values in their
             ## data
@@ -148,19 +144,37 @@ ui <- fluidPage(
                 checkboxGroupInput("dm_cols",
                                    "Temp Checkbox",
                                    c("label 1" = "option1",
-                                     "label 2" = "option2")),
+                                     "label 2" = "option2"))
             ),
+            radioButtons("license", "License",
+                         choices = c(No = "license_no",
+                                     Yes = "license_yes"),
+                         selected = "license_no"),
+            ## if user selects yes above
+            ## program asks user for their
+            ## current weight and length
+            ## values
+            conditionalPanel(
+                condition = "input.license == 'license_yes'",
+                radioButtons("choice", "license Options",
+                             choices = c(CC0 = "CC0",
+                                         CCBY = "CCBY",
+                                         BSD = "BSD"),
+                             selected = "CC0")
+            ),
+            
+            downloadButton("download", "Download"),
         ),
         
         
         
         
         mainPanel(
+            verbatimTextOutput("text"),
             titlePanel("Data Pre-cleaning"),
             tableOutput("contents"),
             titlePanel("Data After Cleaning"),
-            tableOutput("clean_data"),
-            verbatimTextOutput("text")
+            tableOutput("clean_data")
         )
     )
 )
@@ -190,6 +204,7 @@ server <- function(input, output,session) {
         req(input$file1)
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
+        df <- add_ms_and_indivdID(df)
         ##----------------------------------------------------------------------
         if (input$verLoc == "vl_yes"){
             if (length(input$verLoc_cols) >= 2){
@@ -234,10 +249,6 @@ server <- function(input, output,session) {
             }
         }
         ##----------------------------------------------------------------------
-        if (input$msIDevID == "msID-evID_yes"){
-            df <- add_ms_and_indivdID(df)
-        }
-        ##----------------------------------------------------------------------
         if (input$mst == "mst_yes"){
             check = strsplit(input$matSamp_check, ",")
             replace = strsplit(input$matSamp_replace, ",")
@@ -253,6 +264,12 @@ server <- function(input, output,session) {
                 df <- dataMelt(df,arr)
             }
         }
+        
+        if(input$license == "license_yes"){
+            df <- license(df,input$choice)
+        }
+        ##----------------------------------------------------------------------
+        
         ##----------------------------------------------------------------------
         if(input$disp == "head") {
             return(head(df))
@@ -293,20 +310,17 @@ server <- function(input, output,session) {
         }
     })
     
-    server <- function(input, output) {
-        # Our dataset
-        data <- mst_dict
-        
-        output$downloadData <- downloadHandler(
-            filename = function() {
-                paste("MST_Dict", Sys.Date(), ".csv", sep="")
+    
+    output$download <-
+        downloadHandler(
+            filename = function () {
+                paste("cleanData.csv", sep = "")
             },
             content = function(file) {
-                write.csv(data, file)
+                write.csv(df, file)
             }
         )
-    }
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server)
+shinyApp(ui, server)
