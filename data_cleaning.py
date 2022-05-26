@@ -7,11 +7,11 @@ prasiddhi@email.arizona.edu; balkm@email.arizona.edu; nsewnath@ufl.edu
 #===========================================================================================================================================
 
 import pandas as pd
+import numpy as np
 import re
 import json
 import uuid
 import warnings
-import numpy as np
 
 # from sphinx.config import eval_config_file
 
@@ -210,7 +210,7 @@ def add_ms_and_indivdID(df):
     """
     Adds unique hex value materialSampleID and eventID to dataframe
     """
-    df = df.assign(materialSampleID = [uuid.uuid4().hex for _ in range(len(df.index))])
+    df['materialSampleID'] = [uuid.uuid4().hex for _ in range(len(df.index))]
     df = df.assign(individualID = np.arange(len(df)))
     return df
 
@@ -260,6 +260,32 @@ def dataMelt(df,arr):
 #===========================================================================================================================================
 
 #TODO: print out non geome columns and prompt user to proceed
+
+# def make_clickable(url, name):
+#     return '<a href="{}" rel="noopener noreferrer" target="_blank">{}</a>'.format(url,name)
+
+# def license(df,license):
+    
+#     if(license == "BSD"):
+#         df['License'] = df.apply(lambda x: make_clickable(x['https://opensource.org/licenses/BSD-3-Clause'], x['License']), axis=1)
+#     elif(license == "CC-BY"):
+#         df['License'] = df.apply(lambda x: make_clickable(x['https://creativecommons.org/licenses/by/4.0/'], x['License']), axis=1)
+#     else:
+#         df['License'] = df.apply(lambda x: make_clickable(x['https://creativecommons.org/publicdomain/zero/1.0/legalcode'], x['License']), axis=1)
+#     df['name'] = df['name'].apply(lambda x: f'<a href="http://softhints.com/tutorial/{x}">{x}</a>')
+#     df.to_html(escape=False)
+
+# def make_clickable(val):
+#     return '<a target="_blank" href="{}">{}</a>'.format(val, val)
+
+def license(df,license):
+    if(license == "BSD"):
+        df = df.assign(License = "BSD")
+    elif(license == "CC-BY"):
+        df = df.assign(License = "CC-BY")
+    else:
+        df = df.assign(License = "CC0")
+    return df
 
 def to_json(df):
     """
@@ -354,6 +380,3 @@ if __name__ == '__main__':
 
     print(f'These required columns are still missing: {list(set(required_columns) - set(df.columns))}')
 '''
-
-df = pd.read_csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Scripts/pythonConversion/1987to2019_Cougar_Weight_Length_Public_Request.csv")
-df = remove_rcna(df)
