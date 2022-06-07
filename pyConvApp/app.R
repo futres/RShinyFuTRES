@@ -23,6 +23,7 @@ ui <- fluidPage(
     # App title ----
     titlePanel(tags$h1(
         tags$a("Data Cleaning",href="https://github.com/futres/RShinyFuTRES/blob/main/README.md")
+    #can we add links to the template (https://github.com/futres/template/blob/master/template.csv) and the ontology terms?
     )
     ),
     # Sidebar layout with input and output definitions ----
@@ -50,12 +51,12 @@ ui <- fluidPage(
             ## Column Check function, makes sure that
             ## column names in the csv match those of
             ## the FuTRES template
-            radioButtons("cc", "Column Check",
+            radioButtons("cc", "Check your columns: this compares your columns to the template",
                          choices = c(No = "cc_no",
                                      Yes = "cc_yes"),
                          selected = "cc_no"),
             ## Verbatim Locality function
-            radioButtons("verLoc", "Verbatim Locality",
+            radioButtons("verLoc", "create verbatimLocality column",
                          choices = c(No = "vl_no",
                                      Yes = "vl_yes"),
                          selected = "vl_no"),
@@ -74,7 +75,7 @@ ui <- fluidPage(
             ## Material Sample Type function, will
             ## only work with a materialSampleType
             ## column
-            radioButtons("mst", "Material Sample Type",
+            radioButtons("mst", "Standardize terms in materialSampleType (Whole organism, Part organism - whole element, Part organism - part element)",
                          choices = c(No = "mst_no",
                                      Yes = "mst_yes"),
                          selected = "mst_no"),
@@ -89,7 +90,7 @@ ui <- fluidPage(
             ),
             ## Asks user if the values of Length
             ## and Weight columns 
-            radioButtons("conv", "Unit Conversions",
+            radioButtons("conv", "Do you need to convert your units to 'mm' and 'g'?",
                          choices = c(No = "conv_no",
                                      Yes = "conv_yes"),
                          selected = "conv_no"),
@@ -99,13 +100,13 @@ ui <- fluidPage(
             ## values
             conditionalPanel(
                 condition = "input.conv == 'conv_yes'",
-                radioButtons("len", "Current Length Values",
+                radioButtons("len", "Select which units your length values are currently in:",
                              choices = c(Inches = "in",
                                          Centimeters = "cm",
                                          Meters = "m",
                                          Millimeters = "mm"),
                              selected = "mm"),
-                radioButtons("wght", "Current Weight Values",
+                radioButtons("wght", "Select which units your mass values are currently in:",
                              choices = c(Pounds = "lbs",
                                          Kilograms = "kg",
                                          Milligrams = "mg",
@@ -121,21 +122,21 @@ ui <- fluidPage(
                          selected = "s_no"),
             ## Asks user if they want to
             ## add a year collected column
-            radioButtons("yc", "Year Collected (Current date must be in yyyy-mm-dd format)",
+            radioButtons("yc", "Create yearCollected (Current date must be in yyyy-mm-dd format)",
                          choices = c(No = "yc_no",
                                      Yes = "yc_yes"),
                          selected = "yc_no"),
             ## Asks user if they want to check
             ## if all of the countries in the data
             ## are accepted by FuTRES
-            radioButtons("cv", "Country Validity",
+            radioButtons("cv", "Check country terms",
                          choices = c(No = "cv_no",
                                      Yes = "cv_yes"),
                          selected = "cv_no"),
             ## Asks user if they want to melt the 
             ## quantitative values in their
             ## data
-            radioButtons("melt", "Data Melt",
+            radioButtons("melt", "Do you need to transform the dataset so that there is one measurement per row?",
                          choices = c(No = "melt_no",
                                      Yes = "melt_yes"),
                          selected = "melt_no"),
@@ -146,7 +147,7 @@ ui <- fluidPage(
                                    c("label 1" = "option1",
                                      "label 2" = "option2"))
             ),
-            radioButtons("license", "License",
+            radioButtons("license", "Do you need to add a license to your dataset?",
                          choices = c(No = "license_no",
                                      Yes = "license_yes"),
                          selected = "license_no"),
@@ -156,7 +157,7 @@ ui <- fluidPage(
             ## values
             conditionalPanel(
                 condition = "input.license == 'license_yes'",
-                radioButtons("choice", "license Options",
+                radioButtons("choice", "Please select your license:",
                              choices = c(CC0 = "CC0",
                                          CCBY = "CCBY",
                                          BSD = "BSD"),
