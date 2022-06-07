@@ -62,15 +62,14 @@ using various functions found in the program.
 -----------------------------------------------------------------------------------------------------------------------
 <h3>Dataset</h3>
             
-To achive best results, please set eventDate to a "year, month, day" format. To do this, follow these steps:
+To achive best results, please set eventDate to a "YYYY-MM-DD" (format. To do this in excel, follow these steps:
 
-      1) Open up data in excel
-      2) Select the column heading in which your date values are listed 
-      3) Right click and select "Format Cells"
-      4) Go to the "eventDate" category
-      5) Select the "year-month-day" format and click "OK"
+      1) Select the column heading in which your date values are listed 
+      2) Right click and select "Format Cells"
+      3) Go to the "eventDate" category
+      4) Select the "year-month-day" format and click "OK"
             
- If you have a mix of measurement units for a type of measurement (e.g., weight in grams and pounds), please standardize before proceeding.
+ If you have a mix of measurement units for a type of measurement (e.g., mass in both grams and pounds), please standardize before proceeding.
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -79,9 +78,7 @@ To achive best results, please set eventDate to a "year, month, day" format. To 
 ```
 matSampType()
 ```
-The material sample type function is to standardize descriptions of the completeness of a materialSample (i.e., specimen). For example, replacing internal coding of specimen condition (e.g., sk = skinned; gut = gutted; etc.) with human-readable terms.
-
-Once you have finished using this program please send a pull request for the updated matSampType dictionary file.
+The materialSampleType function is to standardize descriptions of the completeness of a materialSample (i.e., specimen). For example, replacing internal coding of specimen condition (e.g., sk = skinned; gut = gutted; etc.) with a controlled vocabulary: Whole organism, Part organism - whole element, Part organism - part element.
 
 ```
 add_ms_and_indivdID
@@ -122,42 +119,42 @@ This function creates a unique materialSampleID for the dataframe.
 ```
 dataMelt()
 ```
-The dataMelt function combines the quantitative measurements(like weight and length) into one column. This creates long format data, where each row is a measurement of a trait.
+The dataMelt function turns data into a short format, with each row as a measurement. It takes the measurementType columns (e.g., body mass, total length, etc.) and turns them into rows with the values into a new column measurementValue.
 
 ```
 diagnosticID()
 ```
-The diagnosticID is unique for each row (i.e., record) and is applied <i>after</i> the dataMelt() function.
+The diagnosticID is unique for each row (i.e., record) and is applied <i>after</i> the dataMelt() function. This is automatic.
 
 ```
 inConv()
 ```
-Changes values in inches to millimeters (1 inch = 1.54 millimeters).
+The inConv() function changes values in inches to millimeters (1 inch = 1.54 millimeters).
             
 ```
 cmConv()
 ```
-Changes values in centimeters to millimeters. 
+The cmConv() function changes values in centimeters to millimeters. 
             
 ```
 mConv()
 ```
-Changes values in meters to millimeters.
+the mConv() function changes values in meters to millimeters.
 
 ```
 lbsConv()
 ```
-Changes values in pounds to grams (1 pound = 453.59237 grams).
+The lbsConv() function changes values in pounds to grams (1 pound = 453.59237 grams).
             
 ```
 kgConv()
 ```
-Changes values in kilograms to grams.
+The kgConv() function changes values in kilograms to grams.
             
 ```
 mgConv()
 ```
-Changes values in milligrams to grams. 
+The mgConv() function changes values in milligrams to grams. 
 
 ```
 license()
@@ -167,7 +164,7 @@ Adds licensing to the data. Licenses are assumed to be <a href="https://creative
 ```
 to_json()
 ```
-Converts all columns that do not match the template into a singular dynamicProperties column
+Converts all columns that do not match the template into a singular dynamicProperties column.  This is automatic.
 
 -----------------------------------------------------------------------------------------------------------------------
 
