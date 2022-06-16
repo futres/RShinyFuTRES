@@ -81,11 +81,6 @@ matSampType()
 The materialSampleType function is to standardize descriptions of the completeness of a materialSample (i.e., specimen). For example, replacing internal coding of specimen condition (e.g., sk = skinned; gut = gutted; etc.) with a controlled vocabulary: Whole organism, Part organism - whole element, Part organism - part element.
 
 ```
-add_ms_and_indivdID
-```
-The ID function adds individualID, with the assumption that each row in the original dataset is a unique indivdual. This function also adds materialSampleID, which is unique for each bone of an individual. See <a href="https://futres.org/how_it_works/">"how it works"</a> for more information. These are applied <i>before</i> turning the dataset into a long version using the dataMelt() funciton.
-
-```
 sex()
 ```
 The sex function helps standardize sex terms to a controlled vocabulary accepted by GEOME. For example, it takes values like "F" and "M" and changes them 
@@ -110,11 +105,6 @@ The year collected function extracts information from the *modified* date column
 countryValidity()
 ```
 If your dataframe has a "country" column this function will make sure that all of the countries listed on there are recognized by GENOME.
-
-```
-add_ms_and_evID()
-```
-This function creates a unique materialSampleID for the dataframe.
 
 ```
 dataMelt()
