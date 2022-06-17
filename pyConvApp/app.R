@@ -21,9 +21,13 @@ reticulate::source_python("data_cleaning.py")
 ui <- fluidPage(
     
     # App title ----
+    #h1("Uploading Data")
+    #h1("Uploading Data", href="https://github.com/futres/RShinyFuTRES/blob/main/README.md"),
+    #tags$a(href="https://github.com/futres/RShinyFuTRES/blob/main/README.md",
+           #"Uploading Data"),
+    
     titlePanel(tags$h1(
         tags$a("Data Cleaning",href="https://github.com/futres/RShinyFuTRES/blob/main/README.md")
-    #can we add links to the template (https://github.com/futres/template/blob/master/template.csv) and the ontology terms?
     )
     ),
     # Sidebar layout with input and output definitions ----
@@ -100,18 +104,24 @@ ui <- fluidPage(
             ## values
             conditionalPanel(
                 condition = "input.conv == 'conv_yes'",
-                radioButtons("len", "Select which units your length values are currently in:",
+                checkboxGroupInput("len_col",
+                                   "Temp Checkbox",
+                                   c("label 1" = "option1",
+                                     "label 2" = "option2")),
+                checkboxGroupInput("mass_col",
+                                   "Temp Checkbox",
+                                   c("label 1" = "option1",
+                                     "label 2" = "option2")),
+                radioButtons("len", "Current Length Values",
                              choices = c(Inches = "in",
                                          Centimeters = "cm",
-                                         Meters = "m",
-                                         Millimeters = "mm"),
-                             selected = "mm"),
-                radioButtons("wght", "Select which units your mass values are currently in:",
+                                         Meters = "m"),
+                             selected = "in"),
+                radioButtons("wght", "Current Mass Values",
                              choices = c(Pounds = "lbs",
                                          Kilograms = "kg",
-                                         Milligrams = "mg",
-                                         Grams = "g"),
-                             selected = "g")
+                                         Milligrams = "mg"),
+                             selected = "lbs")
             ),
             ## Asks user if they want to
             ## standardize the sex column
@@ -157,20 +167,22 @@ ui <- fluidPage(
             ## values
             conditionalPanel(
                 condition = "input.license == 'license_yes'",
-                radioButtons("choice", "Please select your license:",
+                radioButtons("choice", "license Options",
                              choices = c(CC0 = "CC0",
                                          CCBY = "CCBY",
                                          BSD = "BSD"),
                              selected = "CC0")
             ),
             
-            downloadButton("download", "Download"),
+            downloadButton("download", "Download Cleaned CSV"),
         ),
         
         
         
         
         mainPanel(
+            h4(strong(span(textOutput("text1"), style="color:#FF33FF"))),
+            h4(strong(span(textOutput("text2"), style="color:#FF33FF"))),
             verbatimTextOutput("text"),
             titlePanel("Data Pre-cleaning"),
             tableOutput("contents"),
@@ -226,31 +238,33 @@ server <- function(input, output,session) {
             df <- yc(df)
         }
         ##----------------------------------------------------------------------
-        if (input$conv == "conv_yes") {
+        if (input$conv == "conv_yes" & length(input$len_col) == 1) {
+            arr_len = c(input$len_col)
             if (input$len == "in") {
-                df <- inConv(df)
+                df <- inConv(df,arr_len[1])
             }
             if (input$len == "cm") {
-                df <- cmConv(df)
+                df <- cmConv(df,arr_len[1])
             }
             if (input$len == "m") {
-                df <- mConv(df)
+                df <- mConv(df,arr_len[1])
             }
         }
         ##----------------------------------------------------------------------
-        if (input$conv == "conv_yes") {
+        if (input$conv == "conv_yes" & length(input$mass_col) == 1) {
+            arr_mass = c(input$mass_col)
             if (input$wght == "lbs") {
-                df <- lbsConv(df)
+                df <- lbsConv(df,arr_mass[1])
             }
             if (input$wght == "mg") {
-                df <- mgConv(df)
+                df <- mgConv(df,arr_mass[1])
             }
             if (input$wght == "kg") {
-                df <- kgConv(df)
+                df <- kgConv(df,arr_mass[1])
             }
         }
         ##----------------------------------------------------------------------
-        if (input$mst == "mst_yes"){
+        if (input$mst == "mst_yes" & "materialSampleType" %in% names(df)){
             check = strsplit(input$matSamp_check, ",")
             replace = strsplit(input$matSamp_replace, ",")
             matSamp_check <- unlist(strsplit(input$matSamp_check, ","))
@@ -270,7 +284,15 @@ server <- function(input, output,session) {
             df <- license(df,input$choice)
         }
         ##----------------------------------------------------------------------
-        
+        output$download <-
+            downloadHandler(
+                filename = function () {
+                    paste("cleanData.csv", sep = "")
+                },
+                content = function(file) {
+                    write.csv(df, file, row.names = FALSE)
+                }
+            )
         ##----------------------------------------------------------------------
         if(input$disp == "head") {
             return(head(df))
@@ -289,11 +311,19 @@ server <- function(input, output,session) {
         cols[df_cols] <- df_cols
         #print(cb_options)
         updateCheckboxGroupInput(session, "verLoc_cols",
-                                 label = "Select Desired columns",
+                                 label = "Select Desired Columns",
                                  choices = cols,
                                  selected = NULL)
         updateCheckboxGroupInput(session, "dm_cols",
-                                 label = "Select Desired columns",
+                                 label = "Select Desired Columns",
+                                 choices = cols,
+                                 selected = NULL)
+        updateCheckboxGroupInput(session, "len_col",
+                                 label = "Select Length Column",
+                                 choices = cols,
+                                 selected = NULL)
+        updateCheckboxGroupInput(session, "mass_col",
+                                 label = "Select Mass Column",
                                  choices = cols,
                                  selected = NULL)
     })
@@ -306,21 +336,38 @@ server <- function(input, output,session) {
         if (input$cc == "cc_yes"){
             cat(colcheck(df))
         }
-        if (input$cv == "cv_yes"){
+        if (input$cv == "cv_yes" & "country" %in% names(df)){
             cat(countryValidity(df))
         }
     })
     
+    warning_text_mst <- reactive({
+        ifelse(input$mst == "mst_yes" & !("materialSampleType" %in% names(df)),
+               'WARNING: No column named materialSampleType in data, Material Sample Type function cannot be applied',
+               '') 
+    })
     
-    output$download <-
-        downloadHandler(
-            filename = function () {
-                paste("cleanData.csv", sep = "")
-            },
-            content = function(file) {
-                write.csv(df, file)
-            }
-        )
+    warning_text_cv <- reactive({
+        ifelse(input$cv == "cv_yes" & !("country" %in% names(df)),
+               'WARNING: No column named country in data, Country Validity function cannot be applied',
+               '') 
+    })
+    
+    #Render the text so that it is available in the UI
+    output$text1 <- renderText(warning_text_mst()) 
+    
+    output$text2 <- renderText(warning_text_cv()) 
+    
+    
+    # output$download <-
+    #     downloadHandler(
+    #         filename = function () {
+    #             paste("cleanData.csv", sep = "")
+    #         },
+    #         content = function(file) {
+    #             write.csv(df, file)
+    #         }
+    #     )
 }
 
 # Run the application 
