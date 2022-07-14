@@ -224,7 +224,7 @@ server <- function(input, output,session) {
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
         df <- dynamicProperties(df) 
-        df <- indexId(df)
+        df <- individualID(df)
         #df <- add_ms_and_indivdID(df)
         ##----------------------------------------------------------------------
         if (input$verLoc == "vl_yes"){
