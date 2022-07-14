@@ -113,15 +113,15 @@ ui <- fluidPage(
                                    c("label 1" = "option1",
                                      "label 2" = "option2")),
                 radioButtons("len", "Current Length Values",
-                             choices = c(Inches = "in",
-                                         Centimeters = "cm",
-                                         Meters = "m"),
-                             selected = "in"),
+                             choices = c(Inches = "inches",
+                                         Centimeters = "centimeters",
+                                         Meters = "meters"),
+                             selected = ),
                 radioButtons("wght", "Current Mass Values",
-                             choices = c(Pounds = "lbs",
-                                         Kilograms = "kg",
-                                         Milligrams = "mg"),
-                             selected = "lbs")
+                             choices = c(Pounds = "pounds",
+                                         Kilograms = "kilograms",
+                                         Milligrams = "milligrams"),
+                             selected = 'pounds')
             ),
             ## Asks user if they want to
             ## standardize the sex column
@@ -183,6 +183,11 @@ ui <- fluidPage(
         mainPanel(
             h4(strong(span(textOutput("text1"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text2"), style="color:#FF33FF"))),
+            h4(strong(span(textOutput("text3"), style="color:#FF33FF"))),
+            h4(strong(span(textOutput("text4"), style="color:#FF33FF"))),
+            h4(strong(span(textOutput("text5"), style="color:#FF33FF"))),
+            h4(strong(span(textOutput("text6"), style="color:#FF33FF"))),
+            h4(strong(span(textOutput("text7"), style="color:#FF33FF"))),
             verbatimTextOutput("text"),
             titlePanel("Data Pre-cleaning"),
             tableOutput("contents"),
@@ -204,6 +209,7 @@ server <- function(input, output,session) {
         req(input$file1)
         
         df <- open_df(input$file1$datapath)
+    
         
         if(input$disp == "head") {
             return(head(df))
@@ -217,7 +223,9 @@ server <- function(input, output,session) {
         req(input$file1)
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
-        df <- add_ms_and_indivdID(df)
+        df <- dynamicProperties(df) 
+        df <- indexId(df)
+        #df <- add_ms_and_indivdID(df)
         ##----------------------------------------------------------------------
         if (input$verLoc == "vl_yes"){
             if (length(input$verLoc_cols) >= 2){
@@ -240,26 +248,26 @@ server <- function(input, output,session) {
         ##----------------------------------------------------------------------
         if (input$conv == "conv_yes" & length(input$len_col) == 1) {
             arr_len = c(input$len_col)
-            if (input$len == "in") {
+            if (input$len == "inches") {
                 df <- inConv(df,arr_len[1])
             }
-            if (input$len == "cm") {
+            if (input$len == "centimeters") {
                 df <- cmConv(df,arr_len[1])
             }
-            if (input$len == "m") {
+            if (input$len == "meters") {
                 df <- mConv(df,arr_len[1])
             }
         }
         ##----------------------------------------------------------------------
         if (input$conv == "conv_yes" & length(input$mass_col) == 1) {
             arr_mass = c(input$mass_col)
-            if (input$wght == "lbs") {
+            if (input$wght == "pounds") {
                 df <- lbsConv(df,arr_mass[1])
             }
-            if (input$wght == "mg") {
+            if (input$wght == "milligrams") {
                 df <- mgConv(df,arr_mass[1])
             }
-            if (input$wght == "kg") {
+            if (input$wght == "kilograms") {
                 df <- kgConv(df,arr_mass[1])
             }
         }
@@ -294,6 +302,11 @@ server <- function(input, output,session) {
                 }
             )
         ##----------------------------------------------------------------------
+        
+        df <- measurementUnits(df)
+        
+        df <- diagnosticId(df)
+        
         if(input$disp == "head") {
             return(head(df))
         }
@@ -353,10 +366,57 @@ server <- function(input, output,session) {
                '') 
     })
     
+    warning_text_uc <- reactive({
+        ifelse(input$conv == "conv_yes" ,
+               'Please double check the units you have selected as your original length and mass',
+               '')
+    })
+    
+    warning_text_len_sel <- reactive({
+        arr_len = c(input$len_col)
+        if (input$conv == "conv_yes" & (length(input$len_col) == 1)){
+            paste("You have selected your length to be: ", arr_len[1], " with original units in ",input$len )
+        }
+    })
+    
+    warning_text_mass_sel <- reactive({
+        arr_mass = c(input$mass_col)
+        if (input$conv == "conv_yes" & (length(input$mass_col) == 1)){
+            paste("You have selected your mass to be: ", arr_mass[1], " with original units in ",input$wght)
+        }
+    })
+    
+    warning_text_len_mul_sel <- reactive({
+        ifelse(input$conv == "conv_yes" & (length(input$len_col) > 1),
+               'You have selected more than one length unit, please change this',
+               '') 
+    })
+    
+    warning_text_mass_mul_sel <- reactive({
+        ifelse(input$conv == "conv_yes" & (length(input$mass_col) > 1),
+               'You have selected more than one mass unit, please change this',
+               '') 
+    })
+    
     #Render the text so that it is available in the UI
     output$text1 <- renderText(warning_text_mst()) 
     
     output$text2 <- renderText(warning_text_cv()) 
+    
+    output$text3 <- renderText(warning_text_uc()) 
+    
+    output$text4 <- renderText(warning_text_len_sel()) 
+    
+    output$text5 <- renderText(warning_text_mass_sel()) 
+    
+    output$text6 <- renderText(warning_text_len_mul_sel()) 
+    
+    output$text7 <- renderText(warning_text_mass_mul_sel()) 
+    
+    ##observeEvent(input$preview, {
+        # Show a modal when the button is pressed
+        ##shinyalert("Caution!", "Please confim that you wight and length columns are correctly selected and the current unit of measurements are accurate", type = "warning")
+    ##})
     
     
     # output$download <-
