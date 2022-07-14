@@ -30,8 +30,8 @@ def open_df(df):
 
 #===========================================================================================================================================
 
-def indexId(df):
-    df.insert(0,'indexID', np.arange(1,len(df)+1))
+def individualID(df):
+    df.insert(0,'individualID', np.arange(1,len(df)+1))
     return df
 
 def diagnosticId(df):
