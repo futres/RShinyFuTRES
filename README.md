@@ -5,6 +5,10 @@ An RShiny app used to convert tabular data into a format for ingest into <a href
 
 If you have any problems while running this program or have any questions please feel free to email futres.team@gmail.com with your concerns.
 
+We currently do not match measurement terms to our list of trait terms. Please go to GEOME to see the term list (info <a href="https://futres.org/data_tutorial/#Generating%20a%20template">here</a>. This will be available in version 2.0.0.
+
+We also currently do not create a materialSampleID, which is a combination of individualID + bone. This will also be available in version 2.0.0.
+
 **Make sure you have conda installed:** <br>
 *<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html">MAC</a>*<br>
 *<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html">Windows</a>*<br>
