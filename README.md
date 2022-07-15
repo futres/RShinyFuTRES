@@ -93,7 +93,7 @@ into "female" and "male". This function also checks for values that it does not 
 ```
 colcheck()
 ```
-This function goes through all of the column names in the user inserted dataframe and figures out which column names do not match the FuTRES template and which of the required column names are missing.
+This function goes through all of the column names in the user inserted dataframe and figures out which column names do not match the <a href="https://github.com/futres/template/blob/master/template.csv">FuTRES template</a> and which of the required column names are missing.
 
 ```
 verLocal()
@@ -158,7 +158,7 @@ Adds licensing to the data. Licenses are assumed to be <a href="https://creative
 ```
 to_json()
 ```
-Converts all columns that do not match the template into a singular dynamicProperties column.  This is automatic.
+Converts all columns that do not match the <a href="https://github.com/futres/template/blob/master/template.csv">template</a> into a singular <a href="https://dwc.tdwg.org/list/#dwc_dynamicProperties">dwc:dynamicProperties</a> column. This is automatic.
 
 -----------------------------------------------------------------------------------------------------------------------
 
