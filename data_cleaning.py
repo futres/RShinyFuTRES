@@ -199,6 +199,7 @@ def dynamicProperties(df):
     error = list(set(df_col_names) - set(geome_col_names["Template Column Names"]))
     if len(error) != 0:
         df["dynamicProperties"] = df[error].apply(lambda x: x.to_json(), axis=1)
+        df = df.drop(columns=error)
     return df
 
 def countryValidity(df):
