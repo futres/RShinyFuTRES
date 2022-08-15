@@ -5,9 +5,27 @@ An <a href="https://futres.shinyapps.io/pyConvApp/">RShiny app</a> used to conve
 
 If you have any problems while running this program or have any questions please feel free to email futres.team@gmail.com with your concerns.
 
-We currently do not match measurement terms to our list of trait terms. Please go to GEOME to see the term list (info <a href="https://futres.org/data_tutorial/#Generating%20a%20template">here</a>. This will be available in version 2.0.0.
+We currently do not match measurement terms to our list of trait terms. Please go to GEOME to see the term list (generate a <a href="https://futres.org/data_tutorial/#Generating%20a%20template">template</a> and select measurementType DEF). This will be available in version 2.0.0.
 
-We also currently do not create a materialSampleID, which is a combination of individualID + bone. This will also be available in version 2.0.0.
+We also currently do not create individualID, which is a unique ID for the specimen or all specimens belonging to the same individual organism, or materialSampleID, which is a combination of individualID + bone. This will also be available in version 2.0.0.
+
+Please refer to our <a href="https://github.com/futres/template/blob/master/template.csv">template</a> for the list of column headers we currently accept. Below are the required columns (<i>note</i>: we create diagnosticID automatically in the RShinyApp.)
+
+column|uri|entity_alias|FuTRES_Use|type|example|Controlled_Vocabulary
+--------------------|----------------|------------|-----------------------------------------------
+individualID|urn:individualID|vertebrateOrganism|An identifier of a distinct individual (e.g. all bones within the same associated skeleton would have the same individualID).|string|UUID; institutionCode-collectionCode-catalogNumber|
+materialSampleID|http://rs.tdwg.org/dwc/terms/materialSampleID|vertebrateOrganism|An identifier for the materialSample (single specimen, carcass, element, or bone) that is globally unique (e.g., each bone within an associated skeleton would have a unique materialSampleID).|string|UUID; institutionCode-collectionCode-catalogNumber|
+diagnosticID|urn:diagnosticID|vertebrateOrganism|An identifier of a single measurement of a specimen / element that is globally unique. We will provide this.|string|UUID|
+scientificName|http://rs.tdwg.org/dwc/terms/scientificName|vertebrateOrganism|The lowest taxonomic identification for a specimen, preferably with authorship information.|string|Neotoma cinerea|
+basisOfRecord|http://rs.tdwg.org/dwc/terms/basisOfRecord|vertebrateOrganism|The specific nature of the specimen.|string||"PreservedSpecimen| FossilSpecimen| LivingSpecimen| HumanObservation| MachineObservation"
+measurementType|http://rs.tdwg.org/dwc/terms/measurementType|measurementDatum|The trait and anatomical or physiological feature being measured.|string||CV from list of traits
+measurementValue|http://rs.tdwg.org/dwc/terms/measurementValue|measurementDatum|The numerical value of measurement.|numerical|45|
+measurementUnit|http://rs.tdwg.org/dwc/terms/measurementUnit|measurementDatum|The unit associated with the measurementValue.|string||mm, cm, m, in, ft, km, g, kg, oz, lb"
+measurementMethod|http://rs.tdwg.org/dwc/terms/measurementMethod|measurementDatum|The description, reference, or URL of the method used for measurementType.|string|used calipers for measurementType|
+yearCollected|urn:yearCollected|vertebrateTraitObsProc|The year the specimen or sample was collected.|integer|1999|
+samplingProtocol|http://rs.tdwg.org/dwc/iri/samplingProtocol|vertebrateTraitObsProc|The method/protocol, reference, or URL of MeasurementType.|string|Von Der Dreish 1976|
+locality|http://rs.tdwg.org/dwc/terms/locality|vertebrateTraitObsProc|The specific description of site.|string|Tecal or Quarry 4|
+country|http://rs.tdwg.org/dwc/terms/county|vertebrateTraitObsProc|The country of observation or collection.|string|USA|
 
 **Make sure you have conda installed:** <br>
 *<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html">MAC</a>*<br>
