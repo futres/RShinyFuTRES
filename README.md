@@ -64,10 +64,10 @@ individualID|urn:individualID|vertebrateOrganism|An identifier of a distinct ind
 materialSampleID|http://rs.tdwg.org/dwc/terms/materialSampleID|vertebrateOrganism|An identifier for the materialSample (single specimen, carcass, element, or bone) that is globally unique (e.g., each bone within an associated skeleton would have a unique materialSampleID).|string|UUID; institutionCode-collectionCode-catalogNumber|
 diagnosticID|urn:diagnosticID|vertebrateOrganism|An identifier of a single measurement of a specimen / element that is globally unique. We will provide this.|string|UUID|
 scientificName|http://rs.tdwg.org/dwc/terms/scientificName|vertebrateOrganism|The lowest taxonomic identification for a specimen, preferably with authorship information.|string|Neotoma cinerea|
-basisOfRecord|http://rs.tdwg.org/dwc/terms/basisOfRecord|vertebrateOrganism|The specific nature of the specimen.|string||"PreservedSpecimen| FossilSpecimen| LivingSpecimen| HumanObservation| MachineObservation"
+basisOfRecord|http://rs.tdwg.org/dwc/terms/basisOfRecord|vertebrateOrganism|The specific nature of the specimen.|string||PreservedSpecimen| FossilSpecimen| LivingSpecimen| HumanObservation| MachineObservation
 measurementType|http://rs.tdwg.org/dwc/terms/measurementType|measurementDatum|The trait and anatomical or physiological feature being measured.|string||CV from list of traits
 measurementValue|http://rs.tdwg.org/dwc/terms/measurementValue|measurementDatum|The numerical value of measurement.|numerical|45|
-measurementUnit|http://rs.tdwg.org/dwc/terms/measurementUnit|measurementDatum|The unit associated with the measurementValue.|string||mm, cm, m, in, ft, km, g, kg, oz, lb"
+measurementUnit|http://rs.tdwg.org/dwc/terms/measurementUnit|measurementDatum|The unit associated with the measurementValue.|string||mm, cm, m, in, ft, km, g, kg, oz, lb
 measurementMethod|http://rs.tdwg.org/dwc/terms/measurementMethod|measurementDatum|The description, reference, or URL of the method used for measurementType.|string|used calipers for measurementType|
 yearCollected|urn:yearCollected|vertebrateTraitObsProc|The year the specimen or sample was collected.|integer|1999|
 samplingProtocol|http://rs.tdwg.org/dwc/iri/samplingProtocol|vertebrateTraitObsProc|The method/protocol, reference, or URL of MeasurementType.|string|Von Der Dreish 1976|
