@@ -223,7 +223,6 @@ server <- function(input, output,session) {
         req(input$file1)
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
-        df <- dynamicProperties(df) 
         df <- individualID(df)
         #df <- add_ms_and_indivdID(df)
         ##----------------------------------------------------------------------
@@ -304,7 +303,7 @@ server <- function(input, output,session) {
         ##----------------------------------------------------------------------
         
         df <- measurementUnits(df)
-        
+        df <- dynamicProperties(df) 
         df <- diagnosticId(df)
         
         if(input$disp == "head") {
@@ -355,13 +354,12 @@ server <- function(input, output,session) {
     })
     
     warning_text_mst <- reactive({
-        ifelse(input$mst == "mst_yes" & !("materialSampleType" %in% names(df)),
-               'WARNING: No column named materialSampleType in data, Material Sample Type function cannot be applied',
-               '') 
+        ifelse(input$mst == "mst_yes" & ("materialSampleType" %in% names(df)),
+               'WARNING: No column named materialSampleType in data, Material Sample Type function cannot be applied','')
     })
     
     warning_text_cv <- reactive({
-        ifelse(input$cv == "cv_yes" & !("country" %in% names(df)),
+        ifelse(input$cv == "cv_yes" & ("country" %in% names(df)),
                'WARNING: No column named country in data, Country Validity function cannot be applied',
                '') 
     })
