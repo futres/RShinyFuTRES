@@ -26,7 +26,7 @@ except:
 
 ## allows for the dataframe to be opened using python
 def open_df(df):
-    return pd.read_csv(df)
+    return pd.read_csv(df,encoding='unicode_escape')
 
 #===========================================================================================================================================
 
@@ -54,6 +54,7 @@ def remove_rcna(df):
     """
     df.dropna(how = 'all', axis = 'columns', inplace = True)
     df.dropna(how = 'all', axis = 'rows', inplace = True)
+    df = df.replace('None', np.nan)
     return df
 
 #===========================================================================================================================================
@@ -210,8 +211,8 @@ def countryValidity(df):
     print("Checking Validity of Countries")
 
     GENOMEcountries = pd.read_csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Mapping%20Files/geome_country_list.csv")
-    invalid = list(set(df["Countries"]) - set(GENOMEcountries["GEOME_Countries"]))
-    print(invalid)
+    invalid = list(set(df["country"]) - set(GENOMEcountries["GEOME_Countries"]))
+    return (f"These country names are not valud according to GENOME: {invalid}")
 
 #===========================================================================================================================================
 
@@ -278,11 +279,11 @@ def measurementUnits(df):
 
 def license(df,license):
     if(license == "BSD"):
-        df = df.assign(License = "BSD")
-    elif(license == "CC-BY"):
-        df = df.assign(License = "CC-BY")
+        df = df.assign(license = "BSD")
+    elif(license == "CCBY"):
+        df = df.assign(license = "CC-BY")
     else:
-        df = df.assign(License = "CC0")
+        df = df.assign(license = "CC0")
     return df
 
 #===========================================================================================================================================
