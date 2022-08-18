@@ -158,6 +158,8 @@ To achive best results, please set eventDate to a "YYYY-MM-DD" (format. To do th
       3) Select the option example "1930-08-05"
       4) Click "Apply"
             
+<i><b>Note</b>: you do not need to format a date column if yearCollected already exists</i>
+
 -----------------------------------------------------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------------------------------------------------
