@@ -189,6 +189,7 @@ ui <- fluidPage(
             h4(strong(span(textOutput("text6"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text7"), style="color:#FF33FF"))),
             verbatimTextOutput("text"),
+            verbatimTextOutput("countryText"),
             titlePanel("Data Pre-cleaning"),
             tableOutput("contents"),
             titlePanel("Data After Cleaning"),
@@ -270,14 +271,20 @@ server <- function(input, output,session) {
                 df <- kgConv(df,arr_mass[1])
             }
         }
+        
         ##----------------------------------------------------------------------
         if (input$mst == "mst_yes" & "materialSampleType" %in% names(df)){
             check = strsplit(input$matSamp_check, ",")
             replace = strsplit(input$matSamp_replace, ",")
             matSamp_check <- unlist(strsplit(input$matSamp_check, ","))
             matSamp_replace <- unlist(strsplit(input$matSamp_replace, ",")) 
-            df <- matSampType(df, check, replace)
-            mst_dict <- mst_add(mst_dict,check,replace)
+            if(length(check) == 1 & length(replace) == 1){
+                c = matSamp_check[1]
+                r = matSamp_replace[1]
+                df <- matSampTypeOneReplace(df,c,r)
+            } else {
+                df <- matSampType(df, matSamp_check, matSamp_replace)
+            }
         }
         ##----------------------------------------------------------------------
         if (input$melt == "melt_yes"){
@@ -348,18 +355,24 @@ server <- function(input, output,session) {
         if (input$cc == "cc_yes"){
             cat(colcheck(df))
         }
+    })
+    
+    output$countryText <- renderPrint({
+        req(input$file1)
+        df <- open_df(input$file1$datapath)
+        df <- remove_rcna(df)
         if (input$cv == "cv_yes" & "country" %in% names(df)){
             cat(countryValidity(df))
         }
     })
     
     warning_text_mst <- reactive({
-        ifelse(input$mst == "mst_yes" & ("materialSampleType" %in% names(df)),
+        ifelse(input$mst == "mst_yes" & !("materialSampleType" %in% names(df)),
                'WARNING: No column named materialSampleType in data, Material Sample Type function cannot be applied','')
     })
     
     warning_text_cv <- reactive({
-        ifelse(input$cv == "cv_yes" & ("country" %in% names(df)),
+        ifelse(input$cv == "cv_yes" & !("country" %in% names(df)),
                'WARNING: No column named country in data, Country Validity function cannot be applied',
                '') 
     })
