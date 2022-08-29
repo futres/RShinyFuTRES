@@ -86,13 +86,18 @@ def matSampType(df,check,replace):
     '''
     More description to status column -- in connection with GENOME
     '''
-
-    for i in range(len(check)):
+    if(len(check) != len(replace)):
+        return df
+    for i in range(1, len(check)):
         checking_vals = df['materialSampleType'].eq(check[i])
         df['materialSampleType'][checking_vals == True] = replace[i]
     return df
-
 #===========================================================================================================================================
+def matSampTypeOneReplace(df,check,replace):
+    checking_vals = df['materialSampleType'].eq(check)
+    df['materialSampleType'][checking_vals == True] = replace
+    return df
+
 #TODO: make for non-english labels
 
 def sex(df):
@@ -212,7 +217,7 @@ def countryValidity(df):
 
     GENOMEcountries = pd.read_csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Mapping%20Files/geome_country_list.csv")
     invalid = list(set(df["country"]) - set(GENOMEcountries["GEOME_Countries"]))
-    return (f"These country names are not valud according to GENOME: {invalid}")
+    return (f"These country names are not valid according to GENOME: {invalid}")
 
 #===========================================================================================================================================
 
