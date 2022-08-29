@@ -367,13 +367,14 @@ server <- function(input, output,session) {
     })
     
     warning_text_mst <- reactive({
-        ifelse(input$mst == "mst_yes" & !("materialSampleType" %in% names(df)),
-               'WARNING: No column named materialSampleType in data, Material Sample Type function cannot be applied','')
+        ifelse(input$mst == "mst_yes",
+               'WARNING: The selected function may not apply if no column named country is present in your function.' 
+               , '')
     })
     
     warning_text_cv <- reactive({
-        ifelse(input$cv == "cv_yes" & !("country" %in% names(df)),
-               'WARNING: No column named country in data, Country Validity function cannot be applied',
+        ifelse(input$cv == "cv_yes",
+               'WARNING: The selected function may not apply if no column named country is present in your function.',
                '') 
     })
     
