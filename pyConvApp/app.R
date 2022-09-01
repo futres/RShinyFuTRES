@@ -371,7 +371,7 @@ server <- function(input, output,session) {
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
         ifelse(input$mst == "mst_yes" & isFALSE("materialSampleType" %in% names(df)),
-               'WARNING: The selected function may not apply if no column named materialSampleType is present in your function.' 
+               'WARNING: The selected function cannot be applied because you do not have a column named materialSampleType.' 
                , '')
     })
     
@@ -380,7 +380,7 @@ server <- function(input, output,session) {
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
         ifelse(input$cv == "cv_yes" & isFALSE("country" %in% names(df)),
-               'WARNING: The selected function may not apply if no column named country is present in your function.',
+               'WARNING: The selected function cannot be applied because you do not have a column named country.',
                '') 
     })
     
