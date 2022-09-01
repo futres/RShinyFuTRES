@@ -224,7 +224,7 @@ server <- function(input, output,session) {
         req(input$file1)
         df <- open_df(input$file1$datapath)
         df <- remove_rcna(df)
-        df <- individualID(df)
+        ##df <- individualID(df)
         #df <- add_ms_and_indivdID(df)
         ##----------------------------------------------------------------------
         if (input$verLoc == "vl_yes"){
@@ -367,13 +367,19 @@ server <- function(input, output,session) {
     })
     
     warning_text_mst <- reactive({
-        ifelse(input$mst == "mst_yes",
-               'WARNING: The selected function may not apply if no column named country is present in your function.' 
+        req(input$file1)
+        df <- open_df(input$file1$datapath)
+        df <- remove_rcna(df)
+        ifelse(input$mst == "mst_yes" & isFALSE("materialSampleType" %in% names(df)),
+               'WARNING: The selected function may not apply if no column named materialSampleType is present in your function.' 
                , '')
     })
     
     warning_text_cv <- reactive({
-        ifelse(input$cv == "cv_yes",
+        req(input$file1)
+        df <- open_df(input$file1$datapath)
+        df <- remove_rcna(df)
+        ifelse(input$cv == "cv_yes" & isFALSE("country" %in% names(df)),
                'WARNING: The selected function may not apply if no column named country is present in your function.',
                '') 
     })
