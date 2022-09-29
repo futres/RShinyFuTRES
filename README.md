@@ -139,7 +139,7 @@ The country list is a controlled vocabulary accepted by GEOME (generate a <a hre
 
 #### Year Collected
 
-Year Collected is only the year from any date (event date, field date, etc.) column you may have. Please see below for formatting.
+yearCollected is only the year from any date (event date, field date, etc.) column you may have. Please see below for formatting.
 
 -----------------------------------------------------------------------------------------------------------------------
 #### Formating dates
