@@ -173,6 +173,10 @@ ui <- fluidPage(
                                          BSD = "BSD"),
                              selected = "CC0")
             ),
+            radioButtons("dp", "Would you like to convert your unrecognized columns to dynamicProperties",
+                         choices = c(No = "dp_no",
+                                     Yes = "dp_yes"),
+                         selected = "dp_no"),
             
             downloadButton("download", "Download Cleaned CSV"),
         ),
@@ -181,13 +185,14 @@ ui <- fluidPage(
         
         
         mainPanel(
+            h4(strong(span(textOutput("text0"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text1"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text2"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text3"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text4"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text5"), style="color:#FF33FF"))),
-            h4(strong(span(textOutput("text6"), style="color:#FF33FF"))),
-            h4(strong(span(textOutput("text7"), style="color:#FF33FF"))),
+            # h4(strong(span(textOutput("text6"), style="color:#FF33FF"))),
+            # h4(strong(span(textOutput("text7"), style="color:#FF33FF"))),
             verbatimTextOutput("text"),
             verbatimTextOutput("countryText"),
             titlePanel("Data Pre-cleaning"),
@@ -238,7 +243,7 @@ server <- function(input, output,session) {
             }
         }
         ##----------------------------------------------------------------------
-        if (input$s == "s_yes"){
+        if (input$s == "s_yes" & "sex" %in% names(df)){
             df <- sex(df)
         }
         ##----------------------------------------------------------------------
@@ -270,6 +275,43 @@ server <- function(input, output,session) {
             if (input$wght == "kilograms") {
                 df <- kgConv(df,arr_mass[1])
             }
+        }
+        if (input$conv == "conv_yes" & length(input$mass_col) > 1) {
+          arr_mass = c(input$mass_col)
+          if (input$wght == "pounds") {
+            df <- lbsConvMulti(df,arr_mass)
+          }
+          if (input$wght == "milligrams") {
+            df <- mgConvMulti(df,arr_mass)
+          }
+          if (input$wght == "kilograms") {
+            df <- kgConvMulti(df,arr_mass)
+          }
+        }
+        
+        if (input$conv == "conv_yes" & length(input$len_col) == 1) {
+          arr_len = c(input$len_col)
+          if (input$wght == "inches") {
+            df <- inConv(df,arr_len[1])
+          }
+          if (input$wght == "centimeters") {
+            df <- cmConv(df,arr_len[1])
+          }
+          if (input$wght == "meters") {
+            df <- mConv(df,arr_len[1])
+          }
+        }
+        if (input$conv == "conv_yes" & length(input$len_col) > 1) {
+          arr_len = c(input$len_col)
+          if (input$len == "inches") {
+            df <- inConvMulti(df,arr_len)
+          }
+          if (input$len == "centimeters") {
+            df <- cmConvMulti(df,arr_len)
+          }
+          if (input$len == "meters") {
+            df <- mConvMulti(df,arr_len)
+          }
         }
         
         ##----------------------------------------------------------------------
@@ -310,7 +352,10 @@ server <- function(input, output,session) {
         ##----------------------------------------------------------------------
         
         df <- measurementUnits(df)
-        df <- dynamicProperties(df) 
+        
+        if(input$dp == "dp_yes"){
+          df <- dynamicProperties(df)  
+        }
         df <- diagnosticId(df)
         
         if(input$disp == "head") {
@@ -366,6 +411,12 @@ server <- function(input, output,session) {
         }
     })
     
+    warning_text_sex <- reactive({
+      if (input$s == "s_yex" & isFALSE("sex" %in% names(df))){
+        paste("You do not have a sex column in your dataframe", "" )
+      }
+    })
+    
     warning_text_mst <- reactive({
         req(input$file1)
         df <- open_df(input$file1$datapath)
@@ -404,19 +455,21 @@ server <- function(input, output,session) {
         }
     })
     
-    warning_text_len_mul_sel <- reactive({
-        ifelse(input$conv == "conv_yes" & (length(input$len_col) > 1),
-               'You have selected more than one length unit, please change this',
-               '') 
-    })
+    # warning_text_len_mul_sel <- reactive({
+    #     ifelse(input$conv == "conv_yes" & (length(input$len_col) > 1),
+    #            'You have selected more than one length unit, please change this',
+    #            '') 
+    # })
     
-    warning_text_mass_mul_sel <- reactive({
-        ifelse(input$conv == "conv_yes" & (length(input$mass_col) > 1),
-               'You have selected more than one mass unit, please change this',
-               '') 
-    })
-    
+    # warning_text_mass_mul_sel <- reactive({
+    #     ifelse(input$conv == "conv_yes" & (length(input$mass_col) > 1),
+    #            'You have selected more than one mass unit, please change this',
+    #            '') 
+    # })
+    # 
     #Render the text so that it is available in the UI
+    output$text0 <- renderText(warning_text_sex()) 
+    
     output$text1 <- renderText(warning_text_mst()) 
     
     output$text2 <- renderText(warning_text_cv()) 
@@ -427,9 +480,9 @@ server <- function(input, output,session) {
     
     output$text5 <- renderText(warning_text_mass_sel()) 
     
-    output$text6 <- renderText(warning_text_len_mul_sel()) 
-    
-    output$text7 <- renderText(warning_text_mass_mul_sel()) 
+    # output$text6 <- renderText(warning_text_len_mul_sel()) 
+    # 
+    # output$text7 <- renderText(warning_text_mass_mul_sel()) 
     
     ##observeEvent(input$preview, {
         # Show a modal when the button is pressed
@@ -437,15 +490,15 @@ server <- function(input, output,session) {
     ##})
     
     
-    # output$download <-
-    #     downloadHandler(
-    #         filename = function () {
-    #             paste("cleanData.csv", sep = "")
-    #         },
-    #         content = function(file) {
-    #             write.csv(df, file)
-    #         }
-    #     )
+    output$download <-
+         downloadHandler(
+             filename = function () {
+                 paste("cleanData.csv", sep = "")
+             },
+             content = function(file) {
+                 write.csv(df, file)
+             }
+         )
 }
 
 # Run the application 

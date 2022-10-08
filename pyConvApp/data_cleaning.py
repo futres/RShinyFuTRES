@@ -122,6 +122,16 @@ def inConv(df,col):
 
 #===========================================================================================================================================
 
+def inConvMulti(df,cols):
+    """
+    Converts length from inches to millimeters
+    """
+    for i in range(len(cols)):
+        df[cols[i]] = df[cols[i]] * 25.4
+    return df
+
+#===========================================================================================================================================
+
 def lbsConv(df,col):
     """
     Converts weight from pounds to grams
@@ -131,11 +141,32 @@ def lbsConv(df,col):
 
 #===========================================================================================================================================
 
+def lbsConvMulti(df,cols):
+    """
+    Converts weight from pounds to grams
+    """
+    for i in range(len(cols)):
+        df[cols[i]] = df[cols[i]] * 453.59237
+    return df
+
+
+#===========================================================================================================================================
+
 def cmConv(df,col):
     """
     Converts length from cenitmeters to millimeters
     """
     df[col] = df[col] * 10
+    return df
+
+#===========================================================================================================================================
+
+def cmConvMulti(df,cols):
+    """
+    Converts length from cenitmeters to millimeters
+    """
+    for i in range(len(cols)):
+        df[cols[i]] = df[cols[i]] * 10
     return df
 
 #===========================================================================================================================================
@@ -149,11 +180,31 @@ def kgConv(df,col):
 
 #===========================================================================================================================================
 
+def kgConvMulti(df,cols):
+    """
+    Converts weight from kilograms to grams
+    """
+    for i in range(len(cols)):
+        df[cols[i]] = df[cols[i]] * 1000
+    return df
+
+#===========================================================================================================================================
+
 def mConv(df,col):
     """
     Converts length from meters to millimeters
     """
     df[col] = df[col] * 1000
+    return df
+
+#===========================================================================================================================================
+
+def mConvMulti(df,cols):
+    """
+    Converts length from meters to millimeters
+    """
+    for i in range(len(cols)):
+        df[cols[i]] = df[cols[i]] * 1000
     return df
 
 #===========================================================================================================================================
@@ -166,14 +217,24 @@ def mgConv(df,col):
     return df
 
 #===========================================================================================================================================
+
+def mgConvMulti(df,cols):
+    """
+    Converts weight from milligrams to grams
+    """
+    for i in range(len(cols)):
+       df[cols[i]] = df[cols[i]] / 1000
+    return df
+
+#===========================================================================================================================================
 #ask which column is EventDate or use column eventDate (should have it based off READ.md)
 
 def yc(df):
     """
     Create and populate yearCollected through the date column
     """
-    df = df.assign(yearCollected = df['Date'].str[:4])
-    df = df.rename(columns = {"Date" : "verbatimEventDate"})
+    df = df.assign(yearCollected = df['eventDate'].str[:4])
+    df = df.rename(columns = {"eventDate" : "verbatimEventDate"})
     return df
 
 #===========================================================================================================================================
@@ -195,7 +256,7 @@ def colcheck(df):
         
 #have it break if the set difference isn't zero
 
-    return (f"These column names do not match the template: {error}\nThese required columns are missing: {missing_req}\nThis app will take care of the following columns: materialSampleID, eventID, measurementType, measurementValue, yearCollected")
+    return (f"These column names do not match the template: {error}\nThese required columns are missing: {missing_req}\nThis app will take care of the following columns: measurementType, measurementValue, yearCollected")
 
 #===========================================================================================================================================
 
