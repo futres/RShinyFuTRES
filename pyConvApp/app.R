@@ -332,6 +332,7 @@ server <- function(input, output,session) {
             if (length(input$dm_cols) >= 2){
                 arr = c(input$dm_cols)
                 df <- dataMelt(df,arr)
+                df <- noMeasurementsPostMelt(df)
             }
         }
         

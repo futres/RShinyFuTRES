@@ -59,14 +59,15 @@ def remove_rcna(df):
     df_col_names = df.columns
     unnecessary = list(set(df_col_names) - set(required_columns))
     print(unnecessary)
-    for(s in unnecessary):
+    for s in unnecessary:
         if df[s].isnull().sum() == df[s].shape[0]:
-            df.drop(s)
-    ##df.dropna(subset=unnecessary, how='all', inplace=True)
-    ##print(df.dropna(subset=unnecessary))
+            df = df.drop(columns=s)
     return df
 
 #===========================================================================================================================================
+
+def noMeasurementsPostMelt(df):
+    df[!is.na(df$measurementValue),]
 
 def dropped_cols(df):
     df_col_names = df.columns
