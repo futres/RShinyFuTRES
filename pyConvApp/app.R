@@ -178,7 +178,7 @@ ui <- fluidPage(
                                      Yes = "dp_yes"),
                          selected = "dp_no"),
             
-            downloadButton("download", "Download Cleaned CSV"),
+            downloadButton("download", "Download Cleaned CSV")
         ),
         
         
@@ -191,10 +191,10 @@ ui <- fluidPage(
             h4(strong(span(textOutput("text3"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text4"), style="color:#FF33FF"))),
             h4(strong(span(textOutput("text5"), style="color:#FF33FF"))),
-            # h4(strong(span(textOutput("text6"), style="color:#FF33FF"))),
-            # h4(strong(span(textOutput("text7"), style="color:#FF33FF"))),
             verbatimTextOutput("text"),
             verbatimTextOutput("countryText"),
+            verbatimTextOutput("mstUnaccepted"),
+            verbatimTextOutput("warning_auto_del"),
             titlePanel("Data Pre-cleaning"),
             tableOutput("contents"),
             titlePanel("Data After Cleaning"),
@@ -228,7 +228,6 @@ server <- function(input, output,session) {
     output$clean_data <- renderTable({
         req(input$file1)
         df <- open_df(input$file1$datapath)
-        df <- remove_rcna(df)
         ##df <- individualID(df)
         #df <- add_ms_and_indivdID(df)
         ##----------------------------------------------------------------------
@@ -247,7 +246,7 @@ server <- function(input, output,session) {
             df <- sex(df)
         }
         ##----------------------------------------------------------------------
-        if (input$yc == "yc_yes"){
+        if (input$yc == "yc_yes" & "eventDate" %in% names(df)){
             df <- yc(df)
         }
         ##----------------------------------------------------------------------
@@ -340,18 +339,9 @@ server <- function(input, output,session) {
             df <- license(df,input$choice)
         }
         ##----------------------------------------------------------------------
-        output$download <-
-            downloadHandler(
-                filename = function () {
-                    paste("cleanData.csv", sep = "")
-                },
-                content = function(file) {
-                    write.csv(df, file, row.names = FALSE)
-                }
-            )
-        ##----------------------------------------------------------------------
         
         df <- measurementUnits(df)
+        df <- remove_rcna(df)
         
         if(input$dp == "dp_yes"){
           df <- dynamicProperties(df)  
@@ -369,7 +359,6 @@ server <- function(input, output,session) {
     observe({
         req(input$file1)
         df <- open_df(input$file1$datapath)
-        df <- remove_rcna(df)
         df_cols <- names(df)
         cols <- list()
         cols[df_cols] <- df_cols
@@ -396,7 +385,6 @@ server <- function(input, output,session) {
     output$text <- renderPrint({
         req(input$file1)
         df <- open_df(input$file1$datapath)
-        df <- remove_rcna(df)
         if (input$cc == "cc_yes"){
             cat(colcheck(df))
         }
@@ -405,10 +393,17 @@ server <- function(input, output,session) {
     output$countryText <- renderPrint({
         req(input$file1)
         df <- open_df(input$file1$datapath)
-        df <- remove_rcna(df)
         if (input$cv == "cv_yes" & "country" %in% names(df)){
             cat(countryValidity(df))
         }
+    })
+    
+    output$mstUnaccepted <- renderPrint({
+      req(input$file1)
+      df <- open_df(input$file1$datapath)
+      if (input$mst == "mst_yes" & "materialSampleType" %in% names(df)){
+        cat(matSampTypeUnmatched(df))
+      }
     })
     
     warning_text_sex <- reactive({
@@ -417,72 +412,66 @@ server <- function(input, output,session) {
       }
     })
     
+    warning_text_cc <- reactive({
+      if (input$yc == "cc_yes"){
+        paste("Please ensure that all of your column names are spelled correctly and in snakeCase")
+      }
+    })
+    
     warning_text_mst <- reactive({
         req(input$file1)
         df <- open_df(input$file1$datapath)
-        df <- remove_rcna(df)
-        ifelse(input$mst == "mst_yes" & isFALSE("materialSampleType" %in% names(df)),
-               'WARNING: The selected function cannot be applied because you do not have a column named materialSampleType.' 
-               , '')
+        if (input$yc == "cv_yes" & isFALSE("country" %in% names(df))){
+          paste("WARNING: The selected function cannot be applied because you do not have a column named materialSampleType.")
+        }
     })
     
     warning_text_cv <- reactive({
         req(input$file1)
         df <- open_df(input$file1$datapath)
-        df <- remove_rcna(df)
-        ifelse(input$cv == "cv_yes" & isFALSE("country" %in% names(df)),
-               'WARNING: The selected function cannot be applied because you do not have a column named country.',
-               '') 
+        if (input$yc == "cv_yes" & isFALSE("country" %in% names(df))){
+          paste("WARNING: The selected function cannot be applied because you do not have a column named country.")
+        }
     })
+    
+    warning_text_yc <- reactive({
+      req(input$file1)
+      df <- open_df(input$file1$datapath)
+      if (input$yc == "yc_yes" & isFALSE("eventDate" %in% names(df))){
+        paste("WARNING: The selected function cannot be applied because you do not have a column named eventDate.")
+      }
+    })
+    
+    # warning_text_yc <- reactive({
+    #   req(input$file1)
+    #   df <- open_df(input$file1$datapath)
+    #   df <- remove_rcna(df)
+    #   if(input$cv == "yc_yes" & isFALSE("eventDate" %in% names(df))){
+    #     # paste('WARNING: The selected function cannot be applied because you do not have a column named eventDate.',
+    #           '')
+    #   }
+    # })
     
     warning_text_uc <- reactive({
         ifelse(input$conv == "conv_yes" ,
-               'Please double check the units you have selected as your original length and mass',
+               'Please double check the columns which you have selected and the original units',
                '')
     })
     
-    warning_text_len_sel <- reactive({
-        arr_len = c(input$len_col)
-        if (input$conv == "conv_yes" & (length(input$len_col) == 1)){
-            paste("You have selected your length to be: ", arr_len[1], " with original units in ",input$len )
-        }
+    
+    output$warning_auto_del <- renderPrint({
+      req(input$file1)
+      df <- open_df(input$file1$datapath)
+      cat(dropped_cols(df))
     })
-    
-    warning_text_mass_sel <- reactive({
-        arr_mass = c(input$mass_col)
-        if (input$conv == "conv_yes" & (length(input$mass_col) == 1)){
-            paste("You have selected your mass to be: ", arr_mass[1], " with original units in ",input$wght)
-        }
-    })
-    
-    # warning_text_len_mul_sel <- reactive({
-    #     ifelse(input$conv == "conv_yes" & (length(input$len_col) > 1),
-    #            'You have selected more than one length unit, please change this',
-    #            '') 
-    # })
-    
-    # warning_text_mass_mul_sel <- reactive({
-    #     ifelse(input$conv == "conv_yes" & (length(input$mass_col) > 1),
-    #            'You have selected more than one mass unit, please change this',
-    #            '') 
-    # })
-    # 
-    #Render the text so that it is available in the UI
-    output$text0 <- renderText(warning_text_sex()) 
-    
-    output$text1 <- renderText(warning_text_mst()) 
-    
-    output$text2 <- renderText(warning_text_cv()) 
-    
-    output$text3 <- renderText(warning_text_uc()) 
-    
-    output$text4 <- renderText(warning_text_len_sel()) 
-    
-    output$text5 <- renderText(warning_text_mass_sel()) 
-    
-    # output$text6 <- renderText(warning_text_len_mul_sel()) 
-    # 
-    # output$text7 <- renderText(warning_text_mass_mul_sel()) 
+
+    output$text0 <- renderText(warning_text_cc())
+    output$text1 <- renderText(warning_text_sex()) 
+    output$text2 <- renderText(warning_text_yc())
+    output$text3 <- renderText(warning_text_mst()) 
+    output$text4 <- renderText(warning_text_cv()) 
+    output$text5 <- renderText(warning_text_uc())
+  
     
     ##observeEvent(input$preview, {
         # Show a modal when the button is pressed
@@ -490,15 +479,10 @@ server <- function(input, output,session) {
     ##})
     
     
-    output$download <-
-         downloadHandler(
-             filename = function () {
-                 paste("cleanData.csv", sep = "")
-             },
-             content = function(file) {
-                 write.csv(df, file)
-             }
-         )
+    ##observeEvent(input$preview, {
+    # Show a modal when the button is pressed
+    ##shinyalert("Caution!", "Please confim that you wight and length columns are correctly selected and the current unit of measurements are accurate", type = "warning")
+    ##})
 }
 
 # Run the application 

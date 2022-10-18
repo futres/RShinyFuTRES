@@ -1,6 +1,6 @@
 # RShinyFuTRES
 
-Our goal is to help data contributors format their data for ingest into <a href="https://geome-db.org/about">GEOME</a> and the <a href="https://futres-data-interface.netlify.app/">FuTRES datastore</a>. FuTRES requires specific <a href="https://github.com/futres/template/blob/master/template.csv">column names</a> and requires one record (e.g., measurement per specimen) per row. This app helps standardize column names and values, as well as converts short format (one specimen per row) into long format (one measurement per row). We also automatically generate all the IDs (diagnosticID, materialSampleID, individualID, and eventID) required for the dataset that FuTRES uses to help reason across the ontology. Please see the FuTRES <a href="https://futres.org/data_tutorial/">data tutorial</a> for more instructions on how to upload data to be made available through our API once data is formated correctly.
+Our goal is to help data contributors format their data for ingest into <a href="https://geome-db.org/about">GEOME</a> and the <a href="https://futres-data-interface.netlify.app/">FuTRES datastore</a>. FuTRES requires specific <a href="https://github.com/futres/template/blob/master/template.csv">column names</a> and requires one record (e.g., measurement per specimen) per row. This app helps standardize column names and values, as well as converts short format (one specimen per row) into long format (one measurement per row). We also automatically generate diagnosticID, which is required for the dataset that FuTRES uses to help reason across the ontology. Please see the FuTRES <a href="https://futres.org/data_tutorial/">data tutorial</a> for more instructions on how to upload data to be made available through our API once data is formated correctly.
 
 This application tackles barriers contributors had when uploading data into GEOME:
 
@@ -17,6 +17,7 @@ We create the following columns:
 We check the following columns:
 * all required columns
 * entries under country
+* entries under materialSampleType
 
 We standardize the following columns entries:
 * materialSampleID
@@ -27,6 +28,8 @@ Please make sure you have read "Getting Started", have your data file as a csv w
 If you have any problems while running this program or have any questions please feel free to email <b>futres.team@gmail.com</b> with your concerns.
 
 ### Limitations
+
+If you get an error an would like to use a function, you'll need to exit the app, fix the error, and return to the app to use the function.
 
 We currently do not match measurement terms to our list of trait terms. We feel the contirbutor can make the best judgements about which ontological trait terms match their measurements. Please go to GEOME to see the term list (generate a <a href="https://futres.org/data_tutorial/#Generating%20a%20template">template</a> and select measurementType DEF). If you need to request a trait term, please create an issue <a href="https://github.com/futres/fovt/issues">here</a> and we will make it!
 
@@ -139,7 +142,7 @@ The country list is a controlled vocabulary accepted by GEOME (generate a <a hre
 
 #### Year Collected
 
-Year Collected is only the year from any date (event date, field date, etc.) column you may have. Please see below for formatting.
+yearCollected is only the year from any date (event date, field date, etc.) column you may have. Please see below for formatting.
 
 -----------------------------------------------------------------------------------------------------------------------
 #### Formating dates
@@ -176,7 +179,15 @@ If you have a mix of measurement units for a type of measurement (e.g., mass in 
 ```
 matSampType()
 ```
-The materialSampleType function is to standardize descriptions of the completeness of a materialSample (i.e., specimen). For example, replacing internal coding of specimen condition (e.g., sk = skinned) with a controlled vocabulary: whole organism, part organism, whole bone, part bone, whole skeleton, gutted, skinned, gutted and skinned.
+The materialSampleType function checks that the values in this column match those accepted in GEOME. The accepted materialSampleTypes are: 
+- whole organism
+- part organism
+- whole bone
+- part bone
+- whole skeleton
+- gutted
+- skinned
+- gutted and skinned
 
 ```
 sex()

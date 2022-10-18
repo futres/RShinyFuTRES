@@ -52,13 +52,26 @@ def remove_rcna(df):
     """
     Removes empty columns and rows from df
     """
-    df.dropna(how = 'all', axis = 'columns', inplace = True)
     df.dropna(how = 'all', axis = 'rows', inplace = True)
-    df = df.replace('None', np.nan)
+    required_columns = ['eventID', 'country','locality','yearCollected','samplingProtocol',
+                        'materialSampleID', 'basisOfRecord','scientificName','diagnosticID',
+                        'measurementMethod','measurementUnit','measurementType','measurementValue']
+    df_col_names = df.columns
+    unnecessary = list(set(df_col_names) - set(required_columns))
+    print(df)
+    df.dropna(subset=unnecessary, how='all', inplace=True)
+    print(df.dropna(subset=unnecessary))
     return df
 
 #===========================================================================================================================================
 
+def dropped_cols(df):
+    df_col_names = df.columns
+    required_columns = ['eventID', 'country','locality','yearCollected','samplingProtocol',
+                        'materialSampleID', 'basisOfRecord','scientificName','diagnosticID',
+                        'measurementMethod','measurementUnit','measurementType','measurementValue']
+    unnecessary = list(set(df_col_names) - set(required_columns))
+    return (f"If any of the following columns (columns not required by the template) are empty the app will automatically drop them. \n{unnecessary}\n")
 ## 
 def verLocal(df,arr): 
     """ 
@@ -80,6 +93,19 @@ def verLocal_oneCol(df,inpt):
 #HOW: Let the user decide which words convert to which materialSampleType
 #print out unique list of what's in there
 #ask them to write a dictionary or fix it; column of theirs and fill in column with options
+
+def matSampTypeUnmatched(df):
+
+    '''
+    More description to status column -- in connection with GENOME
+    '''
+
+    print("Checking Validity of Countries")
+
+    accepted = ['Whole organism', 'Part organism - whole element', 'Part organism - part element']
+    unaccepted = list(set(df['materialSampleType'].unique()) - set(accepted))
+    return (f"These materialSampleType values are not accpeted by the template: {unaccepted}\n")
+
 
 def matSampType(df,check,replace):
 
@@ -246,9 +272,9 @@ def colcheck(df):
     Template found here: https://github.com/futres/template/blob/master/template.csv
     """
 
-    geome_col_names = pd.read_csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Mapping%20Files/template_col_names.csv")
+    geome_col_names = pd.read_csv("https://raw.githubusercontent.com/futres/template/910ecba9dd8159793a674de4fa5d582a40ebf8f7/template.csv")
     df_col_names = df.columns
-    error = list(set(df_col_names) - set(geome_col_names["Template Column Names"]))
+    error = list(set(df_col_names) - set(geome_col_names["column"]))
     required_columns = ['eventID', 'country','locality','yearCollected','samplingProtocol',
                         'materialSampleID', 'basisOfRecord','scientificName','diagnosticID',
                         'measurementMethod','measurementUnit','measurementType','measurementValue']
@@ -256,14 +282,14 @@ def colcheck(df):
         
 #have it break if the set difference isn't zero
 
-    return (f"These column names do not match the template: {error}\nThese required columns are missing: {missing_req}\nThis app will take care of the following columns: measurementType, measurementValue, yearCollected")
+    return (f"These column names do not match the template: {error}\nThese required columns are missing: {missing_req}\nThis app will take care of the following columns: measurementType, measurementValue, yearCollected, diagnosticID\n")
 
 #===========================================================================================================================================
 
 def dynamicProperties(df):
-    geome_col_names = pd.read_csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Mapping%20Files/template_col_names.csv")
+    geome_col_names = pd.read_csv("https://raw.githubusercontent.com/futres/template/910ecba9dd8159793a674de4fa5d582a40ebf8f7/template.csv")
     df_col_names = df.columns
-    error = list(set(df_col_names) - set(geome_col_names["Template Column Names"]))
+    error = list(set(df_col_names) - set(geome_col_names["column"]))
     if len(error) != 0:
         df["dynamicProperties"] = df[error].apply(lambda x: x.to_json(), axis=1)
         df = df.drop(columns=error)
@@ -278,7 +304,7 @@ def countryValidity(df):
 
     GENOMEcountries = pd.read_csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Mapping%20Files/geome_country_list.csv")
     invalid = list(set(df["country"]) - set(GENOMEcountries["GEOME_Countries"]))
-    return (f"These country names are not valid according to GENOME: {invalid}")
+    return (f"These country names are not valid according to GENOME: {invalid}\n")
 
 #===========================================================================================================================================
 
