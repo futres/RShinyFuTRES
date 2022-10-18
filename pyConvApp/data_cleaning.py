@@ -61,7 +61,7 @@ def remove_rcna(df):
     print(unnecessary)
     for(s in unnecessary):
         if df[s].isnull().sum() == df[s].shape[0]:
-            df.drop(col)
+            df.drop(s)
     ##df.dropna(subset=unnecessary, how='all', inplace=True)
     ##print(df.dropna(subset=unnecessary))
     return df
