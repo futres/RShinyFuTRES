@@ -59,8 +59,8 @@ def remove_rcna(df):
     df_col_names = df.columns
     unnecessary = list(set(df_col_names) - set(required_columns))
     print(unnecessary)
-    for(i in range (len(required_columns))):
-        if df[required_columns[i]].isnull().sum() == df[required_columns[i]].shape[0]:
+    for(s in unnecessary):
+        if df[s].isnull().sum() == df[s].shape[0]:
             df.drop(col)
     ##df.dropna(subset=unnecessary, how='all', inplace=True)
     ##print(df.dropna(subset=unnecessary))
