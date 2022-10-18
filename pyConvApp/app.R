@@ -349,6 +349,17 @@ server <- function(input, output,session) {
         }
         df <- diagnosticId(df)
         
+        ##----------------------------------------------------------------------
+        output$download <-
+          downloadHandler(
+            filename = function () {
+              paste("cleanData.csv", sep = "")
+            },
+            content = function(file) {
+              write.csv(df, file, row.names = FALSE)
+            }
+          )
+        
         if(input$disp == "head") {
             return(head(df))
         }
@@ -484,6 +495,16 @@ server <- function(input, output,session) {
     # Show a modal when the button is pressed
     ##shinyalert("Caution!", "Please confim that you wight and length columns are correctly selected and the current unit of measurements are accurate", type = "warning")
     ##})
+    
+    # output$download <-
+    #   downloadHandler(
+    #     filename = function () {
+    #       paste("cleanData.csv", sep = "")
+    #     },
+    #     content = function(file) {
+    #       write.csv(output$clean_data, file, row.names = FALSE)
+    #     }
+    #   )
 }
 
 # Run the application 

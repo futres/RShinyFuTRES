@@ -67,7 +67,8 @@ def remove_rcna(df):
 #===========================================================================================================================================
 
 def noMeasurementsPostMelt(df):
-    df[!is.na(df$measurementValue),]
+    df.dropna(how='any', axis = 'rows', subset = ['measurementValue'], inplace = True)
+    return df
 
 def dropped_cols(df):
     df_col_names = df.columns
