@@ -58,9 +58,12 @@ def remove_rcna(df):
                         'measurementMethod','measurementUnit','measurementType','measurementValue']
     df_col_names = df.columns
     unnecessary = list(set(df_col_names) - set(required_columns))
-    print(df)
-    df.dropna(subset=unnecessary, how='all', inplace=True)
-    print(df.dropna(subset=unnecessary))
+    print(unnecessary)
+    for(i in range (len(required_columns))):
+        if df[required_columns[i]].isnull().sum() == df[required_columns[i]].shape[0]:
+            df.drop(col)
+    ##df.dropna(subset=unnecessary, how='all', inplace=True)
+    ##print(df.dropna(subset=unnecessary))
     return df
 
 #===========================================================================================================================================
@@ -72,7 +75,7 @@ def dropped_cols(df):
                         'measurementMethod','measurementUnit','measurementType','measurementValue']
     unnecessary = list(set(df_col_names) - set(required_columns))
     return (f"If any of the following columns (columns not required by the template) are empty the app will automatically drop them. \n{unnecessary}\n")
-## 
+
 def verLocal(df,arr): 
     """ 
     Creates verbatimLocality column from user specified columns
