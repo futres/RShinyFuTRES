@@ -1,0 +1,13 @@
+name: pyConvApp
+title: pyConvApp
+username:
+account: futres
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6335811
+bundleId: 6420157
+url: https://futres.shinyapps.io/pyConvApp/
+when: 1666205666.82796
+lastSyncTime: 1666205666.82797
+asMultiple: FALSE
+asStatic: FALSE
