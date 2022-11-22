@@ -234,7 +234,8 @@ server <- function(input, output,session) {
           paste("cleanData.csv", sep = "")
         },
         content = function(file) {
-          write.csv(clean_data_reac(), file, row.names=FALSE)
+          ##apply(df,2,as.character)
+          write.csv(apply(clean_data_reac(),2,as.character), file, row.names=FALSE)
         }
       )
 }
