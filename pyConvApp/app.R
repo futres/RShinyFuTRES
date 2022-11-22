@@ -146,7 +146,7 @@ server <- function(input, output,session) {
         }
     })
     
-    output$clean_data <- renderTable({
+    clean_data_reac <- shiny::reactive({
         req(input$file1)
         df <- open_df(input$file1$datapath)
         
@@ -180,6 +180,8 @@ server <- function(input, output,session) {
             return(df)
         }
     })
+    
+    output$clean_data <- renderTable(clean_data_reac())
     
     output$text <- renderPrint({
         req(input$file1)
@@ -232,7 +234,7 @@ server <- function(input, output,session) {
           paste("cleanData.csv", sep = "")
         },
         content = function(file) {
-          write.csv(df, file)
+          write.csv(clean_data_reac(), file, row.names=FALSE)
         }
       )
 }
