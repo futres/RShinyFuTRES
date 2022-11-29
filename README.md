@@ -6,7 +6,7 @@ Please read <a href="https://futres.org/data_tutorial/">Data Tutorial</a> for mo
 
 If you have any problems while running this program or have any questions please feel free to submit an <a href="https://github.com/futres/RShinyFuTRES/issues/new">issue</a>.
 
-<b>Please note that this app can only accept data up to 30MB, if your data is larger than 30MB, the app will not work.</b>
+<b>Please note that this app can only accept data up to <u>30MB</u>.</b>
 
 -----------------------------------------------------------------------------------------------------------------------
 
