@@ -2,6 +2,8 @@
 
 Our goal is to help data contributors format their data for ingest into <a href="https://geome-db.org/about">GEOME</a> and the <a href="https://futres-data-interface.netlify.app/">FuTRES datastore</a>.
 
+We have created a <a href="https://youtu.be/XhnCefQw0wI">video tutorial</a> explaining how to use the app.
+
 Please read <a href="https://futres.org/data_tutorial/">Data Tutorial</a> for more information about uploading data into <a href="https://geome-db.org/">GEOME</a> and accepted terms for the <a href="https://raw.githubusercontent.com/futres/template/910ecba9dd8159793a674de4fa5d582a40ebf8f7/template.csv">template</a>.
 
 If you have any problems while running this program or have any questions please feel free to submit an <a href="https://github.com/futres/RShinyFuTRES/issues/new">issue</a>.
