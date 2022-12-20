@@ -274,10 +274,10 @@ def colcheck(df):
     """
     Checks dataframe columns and flags column names that do not 
     match with template. 
-    Template found here: https://github.com/futres/template/blob/master/template.csv
+    Template found here: https://github.com/futres/template/blob/v3.1.1/template.csv
     """
 
-    geome_col_names = pd.read_csv("https://raw.githubusercontent.com/futres/template/910ecba9dd8159793a674de4fa5d582a40ebf8f7/template.csv")
+    geome_col_names = pd.read_csv("https://raw.githubusercontent.com/futres/template/v3.1.1/template.csv")
     df_col_names = df.columns
     error = list(set(df_col_names) - set(geome_col_names["column"]))
     required_columns = ['eventID', 'country','locality','yearCollected','samplingProtocol',
