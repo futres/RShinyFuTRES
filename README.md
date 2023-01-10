@@ -42,6 +42,7 @@ FuTRES has a set of required columns and accepted columns. All other columns nee
 
 This application tackles barriers contributors had when uploading data into GEOME:
 - Converting to long format
+  + must select _at least two_ measurements
 - Transforming columns not accepted by GEOME into dynamicProperties
 - Checking data values
 
@@ -95,6 +96,8 @@ If your dataframe has a "country" column this function will make sure that all o
 dataMelt()
 ```
 The dataMelt function turns <b>wide</b> data into <b>long</b> format, with each row as a measurement. It takes the measurementType columns (e.g., body mass, total length, etc.) and turns them into rows with the values into a new column measurementValue.
+
+The user must select _at least two_ measurements for this function to work.
 
 The function also removes any rows that have no measurementValue, as well as any empty columns.
 
@@ -159,3 +162,8 @@ individualID
 #### Verbatim fields
 
 If data values need to change, such as a country name, we recommend naming the original column "verbatimCountry" and updating the country name in a new column, Country.
+
+## Caveats
+
+- If downloading a dataframe with only one row, the resulting csv file will be transposed.
+- If you have multiple measurements per row but only select one measurement to take out, the dataframe will remain unchanged.
