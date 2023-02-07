@@ -16,7 +16,7 @@ If you have any problems while running this program or have any questions please
 
 Typically, data is in "wide" format, where each row is a specimen (individual, or element). FuTRES, however, ingests and serves data in a "long" format, where each row is a measurement.
 
-#### Wide, unstandardized format
+#### Wide, unstandardized format:
 CatalogNo. | Species | Date | Management Unit | County | Sex | Age | Status | Weight | Length 
 ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- 
 0 | <i>Puma concolor</i> | 5/19/87 | Mt Emily | Umatilla | F | 4 | A | 105.0 | 75.0 
@@ -25,7 +25,7 @@ CatalogNo. | Species | Date | Management Unit | County | Sex | Age | Status | We
 3 | <i>Puma concolor</i> |  9/28/87 | Chetco | Curry | F | 3 | A | 74.0 | 70.0 
 4 | <i>Puma concolor</i> |  10/4/87 | McKenzie | Lane | F | 2 | A | 76.0 | 73.0 
 
-#### Long, standardized format
+#### Long, standardized format:
 diagnoisticID | materialSampleID | individualID | scientificName | CatalogNumber | eventDate | yearCollected | sex | age | materialSampleType | measurementValue | measurementType | measurementUnit | verbatimLocality | yearCollected 
 ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- 
 1 | 0 | 0 | <i>Puma concolor</i> | 0 | 1987-05-19 | 1987 | female | 4 | whole organism | 47627.2 | body mass | g | Mt Emily, Umatilla 
@@ -56,6 +56,9 @@ The application also:
 
 Please follow this <a href="https://futres.shinyapps.io/pyConvApp/">link</a> to use the application.
 
+R Shiny server seems to have issues, and we recommend opening and using the app locally on R Studio. 
+<a href="https://posit.co/download/rstudio-desktop/">Install R Studio and R</a>.
+
 **If you are not using the web app, please make sure you have conda installed:** <br>
 *<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html">MAC</a>*<br>
 *<a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html">Windows</a>*<br>
@@ -65,14 +68,47 @@ All dependencies needed will automatically be installed.
 
 *!!* If you get an error in the app because of a misspelling or missing column, please exit, fix, and return to the app.
 
+#### Viewing data
+
+The options are "All" to view the full dataset or "Head" to view the first six rows. We recommend choosing "Head" to save on loading and computing time.
+
 ### Data file
 
 The app takes csv files with one row of headers for column names.
 
-#### Template
+### Template
 
-Please refer to our <a href="https://github.com/futres/template/blob/master/template.csv">template</a> for the list of column headers we currently accept. Below are the required columns (<i>note</i>: we create diagnosticID automatically in the RShinyApp.)
-Please have all required columns (in camelCase) before starting.
+Please refer to our <a href="https://github.com/futres/template/blob/master/template.csv">template</a> for the list of column headers and values currently accepted. Please have all required columns (in camelCase) before starting.
+
+Below are the required columns (<i>note</i>: we create diagnosticID automatically in the RShinyApp.)
+
+column|uri|entity_alias|FuTRES_Use|type|example|Controlled_Vocabulary
+-----------|----------------|------------------------------|------------------|--------------|-------------------------------|----------------------
+individualID|urn:individualID|vertebrateOrganism|An identifier of a distinct individual (e.g. all bones within the same associated skeleton would have the same individualID).|string|UUID; institutionCode-collectionCode-catalogNumber|
+materialSampleID|http://rs.tdwg.org/dwc/terms/materialSampleID|vertebrateOrganism|An identifier for the materialSample (single specimen, carcass, element, or bone) that is globally unique (e.g., each bone within an associated skeleton would have a unique materialSampleID).|string|UUID; institutionCode-collectionCode-catalogNumber|
+diagnosticID|urn:diagnosticID|vertebrateOrganism|An identifier of a single measurement of a specimen / element that is globally unique.|string|UUID|
+eventID|http://rs.tdwg.org/dwc/terms/eventID|vertebrateTraitObsProc,The collector's event identifier. This can be the same as the materialSampleID if you are using the diagnostics extension for tracking trait values.|string|UUID|
+institutionCode|http://rs.tdwg.org/dwc/terms/ownerInstitutionCode|vertebrateOrganism|The code or abbreviation for the institution or museum.|string|NMNH for the National Museum of Natural History|
+institutionID|http://rs.tdwg.org/dwc/terms/institutionID|vertebrateOrganism|An identifier for the institution having custody of the object(s) or information referred to in the record.|string|URL|
+collectionCode|http://rs.tdwg.org/dwc/terms/collectionCode|vertebrateOrganism|The code or abbreviation for the collection or department within the museum.|string|PAL for Department of Paleontology|
+catalogNumber|http://rs.tdwg.org/dwc/terms/catalogNumber|vertebrateOrganism|An identifier (preferably unique) assigned to the specimen by the institution or museum.|numerical|12345|
+scientificName|http://rs.tdwg.org/dwc/terms/scientificName|vertebrateOrganism|The lowest taxonomic identification for a specimen, preferably with authorship information.|string|Neotoma cinerea|
+basisOfRecord|http://rs.tdwg.org/dwc/terms/basisOfRecord|vertebrateOrganism|The specific nature of the specimen.|string||PreservedSpecimen| FossilSpecimen| LivingSpecimen| HumanObservation| MachineObservation
+materialSampleType|urn:materialSampleType|vertebrateTraitObsProc|The completeness of the materialSample.|string|whole organism, part organism, whole bone, part bone, whole skeleton, gutted, skinned, gutted and skinned
+lifeStage|http://rs.tdwg.org/dwc/terms/lifeStage|vertebrateOrganism|The age class or life stage of the specimen being measured.|string|Not Applicable, Not Collected, adult, immature, juvenile, subadult
+measurementType|http://rs.tdwg.org/dwc/terms/measurementType|measurementDatum|The trait and anatomical or physiological feature being measured.|string||CV from list of traits
+measurementValue|http://rs.tdwg.org/dwc/terms/measurementValue|measurementDatum|The numerical value of measurement.|numerical|45|
+measurementUnit|http://rs.tdwg.org/dwc/terms/measurementUnit|measurementDatum|The unit associated with the measurementValue.|string||mm, cm, m, in, ft, km, g, kg, oz, lb
+measurementMethod|http://rs.tdwg.org/dwc/terms/measurementMethod|measurementDatum|The description, reference, or URL of the method used for measurementType.|string|used calipers for measurementType|
+measurementRemarks|http://rs.tdwg.org/dwc/terms/measurementRemarks|measurementDatum|Comments or notes accompanying MeasurementType.|string|75% of epiphysis|
+measurementDeterminedDate|http://rs.tdwg.org/dwc/terms/measurementDeterminedDate|measurementDatum|The date the measurementValue was taken.|string|23/12/10|
+measurementAccuracy|http://rs.tdwg.org/dwc/terms/measurementAccuracy|measurementDatum|The numerical value of measurement error for the measurementValue of either the instrument or the measurer.|string|10mm|
+verbatimEventDate|http://rs.tdwg.org/dwc/terms/verbatimEventDate|vertebrateTraitObsProc|The original representation of the date and time of observation or collection.|string|date of collection event, not of measurement; Jun 1847|
+yearCollected|urn:yearCollected|vertebrateTraitObsProc|The year the specimen or sample was collected.|integer|1999|
+samplingProtocol|http://rs.tdwg.org/dwc/iri/samplingProtocol|vertebrateTraitObsProc|The method/protocol, reference, or URL of MeasurementType.|string|Von Der Dreish 1976|
+locality|http://rs.tdwg.org/dwc/terms/locality|vertebrateTraitObsProc|The specific description of site.|string|Tecal or Quarry 4|
+country|http://rs.tdwg.org/dwc/terms/county|vertebrateTraitObsProc|The country of observation or collection.|string|USA|
+references|http://purl.org/dc/terms/references|vertebrateTraitObsProc|A related resource that is referenced or otherwise pointed to by the described resource.|string|DOI or Journal of Vertebrate Paleontology citation format|
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -144,6 +180,10 @@ To achive best results, please set eventDate to a "YYYY-MM-DD" (format. To do th
             
 <i><b>Note</b>: you do not need to format a date column if yearCollected already exists</i>
 
+#### Licensing
+
+We recommend using the license function if one license appies to the entire dataset to avoid copying errors.
+
 #### Unique identifiers
 
 Each measurement has a unique identifier, diagnosticID. Measurments on the same element (e.g., bone) are connected through materialSampleID. Elements of the same individual are connected through individualID.
@@ -167,3 +207,4 @@ If data values need to change, such as a country name, we recommend naming the o
 
 - If downloading a dataframe with only one row, the resulting csv file will be transposed.
 - If you have multiple measurements per row but only select one measurement to take out, the dataframe will remain unchanged.
+- Certain values, like latitude, longitude, and year, may appear different in the app than the originally upload. Fear not - they will be as expected once downloaded!
