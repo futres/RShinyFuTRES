@@ -5,9 +5,9 @@ account: futres
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6335811
-bundleId: 6658856
+bundleId: 6719097
 url: https://futres.shinyapps.io/pyConvApp/
-when: 1671565520.16278
-lastSyncTime: 1671565520.16282
+when: 1673385012.77814
+lastSyncTime: 1673385012.77817
 asMultiple: FALSE
 asStatic: FALSE
