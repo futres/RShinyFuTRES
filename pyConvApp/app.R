@@ -444,6 +444,7 @@ server <- function(input, output,session) {
       df <- dynamicProperties(df)  
     }
     df <- diagnosticId(df)
+    df <- transform(df, diagnosticID = as.integer(diagnosticID))
     
     ##----------------------------------------------------------------------
     
