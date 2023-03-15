@@ -208,3 +208,17 @@ If data values need to change, such as a country name, we recommend naming the o
 - If downloading a dataframe with only one row, the resulting csv file will be transposed.
 - If you have multiple measurements per row but only select one measurement to take out, the dataframe will remain unchanged.
 - Certain values, like latitude, longitude, and year, may appear different in the app than the originally upload. Fear not - they will be as expected once downloaded!
+
+## Citation
+
+To cite the ‘RShinyFuTRES’ application in publications
+use:
+
+``` 
+   'Prasiddhi Gyawali, Neeka Sewnath, Meghan Balk' (2022). RShinyFuTRES: An application for contributing data to the Functional Trait Resource for Environmental Studies.  R shiny version 2.0.0.
+   https://github.com/futres/RShinyFuTRES
+```
+
+## Code of Conduct
+
+View our [code of conduct](https://github.com/futres/RShinyFuTRES/blob/main/CONDUCT.md)
