@@ -215,7 +215,7 @@ To cite the ‘RShinyFuTRES’ application in publications
 use:
 
 ``` 
-   'Prasiddhi Gyawali, Neeka Sewnath, Meghan Balk' (2022). RShinyFuTRES: An application for contributing data to the Functional Trait Resource for Environmental Studies.  R shiny version 2.0.0.
+   'Prasiddhi Gyawali, Neeka Sewnath, Meghan Balk' (2022). RShinyFuTRES: An application for contributing data to the Functional Trait Resource for Environmental Studies. R shiny version 2.0.0.
    https://github.com/futres/RShinyFuTRES
 ```
 
