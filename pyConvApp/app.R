@@ -351,6 +351,7 @@ ui <- fluidPage(
     
     
     mainPanel(
+      h4(strong(span(textOutput("text6"), style="color:#FF33FF"))),
       h4(strong(span(textOutput("text0"), style="color:#FF33FF"))),
       h4(strong(span(textOutput("text4"), style="color:#FF33FF"))),
       verbatimTextOutput("text"),
@@ -423,6 +424,7 @@ server <- function(input, output,session) {
     df <- open_df(input$file1$datapath)
     
     if (input$melt == "melt_yes"){
+      cat("test")
       if (length(input$dm_cols) >= 2){
         arr = c(input$dm_cols)
         df <- dataMelt(df,arr)
@@ -442,6 +444,7 @@ server <- function(input, output,session) {
       df <- dynamicProperties(df)  
     }
     df <- diagnosticId(df)
+    df <- transform(df, diagnosticID = as.integer(diagnosticID))
     
     ##----------------------------------------------------------------------
     
@@ -461,7 +464,7 @@ server <- function(input, output,session) {
     cols[df_cols] <- df_cols
     #print(cb_options)
     updateCheckboxGroupInput(session, "dm_cols",
-                             label = "Select Desired Columns",
+                             label = "Select Measurements",
                              choices = cols,
                              selected = NULL)
   })
@@ -502,6 +505,10 @@ server <- function(input, output,session) {
     }
   })
   
+  warning_text_data_display <- reactive({
+    paste("Values in decimalLatitude, decimalLongitude, and yearCollected may appear differently on the app but will appear similar to the original data file in the downloaded data")
+  })
+  
   output$warning_auto_del <- renderPrint({
     req(input$file1)
     df <- open_df(input$file1$datapath)
@@ -510,6 +517,7 @@ server <- function(input, output,session) {
   
   output$text0 <- renderText(warning_text_cc())
   output$text4 <- renderText(warning_text_cv())
+  output$text6 <- renderText(warning_text_data_display())
   
   output$download <-
     downloadHandler(

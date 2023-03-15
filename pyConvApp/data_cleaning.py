@@ -75,7 +75,7 @@ def matSampTypeUnmatched(df):
 
     accepted = ['Whole organism', 'Part organism - whole element', 'Part organism - part element']
     unaccepted = list(set(df['materialSampleType'].unique()) - set(accepted))
-    return (f"These materialSampleType values are not accpeted by the template: {unaccepted}\n")
+    return (f"These materialSampleType values are not accepted by the template: {unaccepted}\n")
 
 
 def colcheck(df):
